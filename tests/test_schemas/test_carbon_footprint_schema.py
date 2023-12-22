@@ -32,7 +32,7 @@ def valid_carbon_footprint_data():
 def test_carbon_footprint_schema_validation(valid_carbon_footprint_data):
     """Test successful validation for valid carbon footprint data."""
     footprint = CarbonFootprint(**valid_carbon_footprint_data)
-    assert footprint.dict() == valid_carbon_footprint_data  # Assert all attributes are set correctly
+    assert footprint.model_dump() == valid_carbon_footprint_data  # Assert all attributes are set correctly
 
 
 def test_carbon_footprint_missing_declared_unit(valid_carbon_footprint_data):
