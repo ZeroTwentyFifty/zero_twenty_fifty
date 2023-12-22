@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from pydantic import BaseModel, validator
+from pydantic import field_validator, BaseModel
 
 
 class CarbonFootprint(BaseModel):
@@ -22,7 +22,8 @@ class CarbonFootprint(BaseModel):
     exemptedEmissionsDescription: str
     packagingEmissionsIncluded: bool
 
-    @validator('exemptedEmissionsPercent')
+    @field_validator('exemptedEmissionsPercent')
+    @classmethod
     def check_percent(cls, v):
         assert 0 <= v <= 5, "Value must be a decimal number between 0.0 and 5."
         return v
