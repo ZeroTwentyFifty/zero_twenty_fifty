@@ -4,6 +4,10 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 
+"""
+TODO: Replace all of this with https://docs.pydantic.dev/latest/concepts/pydantic_settings/
+"""
+
 env_path = Path(".") / ".env"
 load_dotenv(dotenv_path=env_path)
 
