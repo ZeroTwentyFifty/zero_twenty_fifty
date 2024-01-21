@@ -52,6 +52,14 @@ openapi_schema = {
     },
 }
 
+"""Additional Testing Tips:
+
+
+Edge cases: Consider tests for invalid form data (if the OAuth2ClientCredentialsRequestForm has validation constraints).
+Negative scenarios: Write tests to ensure incorrect credentials or invalid scopes are rejected. 
+Integration tests: If possible, set up tests that interact with a real token endpoint to validate the end-to-end flow.
+"""
+
 
 def test_openapi_schema():
     response = client.get("/openapi.json")
@@ -59,25 +67,25 @@ def test_openapi_schema():
     assert response.json() == openapi_schema
 
 
-def test_no_token():
+def test_missing_authorization_header_results_in_403():
     response = client.get("/items")
     assert response.status_code == 403, response.text
     assert response.json() == {"detail": "AccessDenied OAuth2 Client Credentials"}
 
 
-def test_incorrect_token():
+def test_invalid_bearer_token_returns_403():
     response = client.get("/items", headers={"Authorization": "Non-existent testtoken"})
     assert response.status_code == 403, response.text
     assert response.json() == {"detail": "AccessDenied OAuth2 Client Credentials"}
 
 
-def test_token():
+def test_valid_bearer_token_returns_200():
     response = client.get("/items", headers={"Authorization": "Bearer testtoken"})
     assert response.status_code == 200, response.text
     assert response.json() == {"token": "testtoken"}
 
 
-def test_client_credentials_form():
+def test_valid_client_credentials_form():
     form = OAuth2ClientCredentialsRequestForm(
         client_id="client_id", client_secret="client_secret", scope="profile"
     )
