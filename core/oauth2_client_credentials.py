@@ -14,6 +14,13 @@ class SchemeName(str, Enum):
 
 class OAuth2ClientCredentialsRequestForm:
     """
+
+    Most of this code was scalped from this PR:
+        https://github.com/tiangolo/fastapi/pull/5052
+
+    Mainly on account of the FastAPI devs never getting round to pulling code
+    in, even after 2 years.
+
     This is a dependency class, use it like:
         token_scheme = HTTPBasicClientCredentials(
             auto_error=False, scheme_name="oAuth2ClientCredentials"
