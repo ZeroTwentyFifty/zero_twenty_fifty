@@ -1,3 +1,5 @@
+from fastapi import HTTPException
+
 from db.repository.users import create_new_user
 from db.session import get_db
 from schemas.user import ShowUser
@@ -79,3 +81,12 @@ def test_get_current_user_from_token_success(client, test_user, test_credentials
 
     assert user == test_user
     assert user.email == username # needs to be touched up a bit here
+
+
+def test_get_current_user_from_token_failure_with_invalid_token(client, test_user, test_credentials, db_session):
+    access_token = "InvalidToken"
+    with pytest.raises(HTTPException) as exc_info:
+        get_current_user_from_token(token=access_token, db=db_session)
+    assert exc_info.value.status_code == 403
+    assert exc_info.value.detail == "AccessDenied OAuth2 Client Credentials"
+    assert exc_info.value.headers == {"WWW-Authenticate": "Bearer"}
