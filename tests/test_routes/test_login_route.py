@@ -1,14 +1,12 @@
-from fastapi import HTTPException
+import json
+from datetime import timedelta
 
-from db.repository.users import create_new_user
-from db.session import get_db
-from schemas.user import ShowUser
-from schemas.user import UserCreate
+from fastapi import HTTPException
+from fastapi.responses import JSONResponse
+import pytest
+
 from apis.version1.route_login import authenticate_user, get_current_user_from_token
 from core.security import create_access_token
-
-
-import pytest
 
 
 @pytest.fixture
@@ -90,3 +88,25 @@ def test_get_current_user_from_token_failure_with_invalid_token(client, test_use
     assert exc_info.value.status_code == 403
     assert exc_info.value.detail == "AccessDenied OAuth2 Client Credentials"
     assert exc_info.value.headers == {"WWW-Authenticate": "Bearer"}
+
+
+def test_get_current_user_from_token_failure_with_invalid_token_json_response(client, test_user, test_credentials, db_session):
+    access_token = create_access_token(data={"sub": ""})
+    response = get_current_user_from_token(token=access_token, db=db_session)
+    json_response = json.loads(response.body)
+    assert isinstance(response, JSONResponse)
+    assert response.status_code == 403
+    assert json_response == {'message': 'Access Denied', 'code': 'AccessDenied'}
+    assert json_response["message"] == "Access Denied"
+    assert json_response["code"] == "AccessDenied"
+
+
+def test_get_current_user_from_token_failure_with_expired_token(client, test_user, test_credentials, db_session):
+    access_token = create_access_token(data={"sub": test_user.email}, expires_delta=timedelta(minutes=-1))
+    response = get_current_user_from_token(token=access_token, db=db_session)
+    json_response = json.loads(response.body)
+    assert isinstance(response, JSONResponse)
+    assert response.status_code == 401
+    assert json_response == {"message":"The specified access token has expired","code":"TokenExpired"}
+    assert json_response["message"] == "The specified access token has expired"
+    assert json_response["code"] == "TokenExpired"
