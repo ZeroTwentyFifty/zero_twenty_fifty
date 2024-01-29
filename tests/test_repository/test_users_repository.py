@@ -47,3 +47,14 @@ def test_create_new_user_sets_attributes(db_session, test_user):
     new_user = create_new_user(user=UserCreate(**user_data), db=db_session)
     assert new_user.is_active is True
     assert new_user.is_superuser is False
+
+
+"""
+TODO: We are not performing any sort of validation on the password field
+    we need to improve this, at least add a minimum pw length check
+
+def test_create_new_user_invalid_password(db_session):
+    user_data = {"username": "invaliduser", "email": "invalid_password@example.com", "password": "t"}
+    with pytest.raises(ValueError):
+        create_new_user(user=UserCreate(**user_data), db=db_session)
+"""
