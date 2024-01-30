@@ -7,7 +7,7 @@ import pydantic
 
 #from db.models.product_footprint import ProductFootprint
 from db.repository.product_footprints import create_new_product_footprint, retrieve_product_footprint, \
-    list_product_footprints
+    list_product_footprints, count_product_footprints
 from schemas.product_footprint import ProductFootprint
 from schemas.carbon_footprint import CarbonFootprint
 
@@ -159,3 +159,10 @@ def test_list_product_footprints(two_product_footprints, db_session):
     for footprint in product_footprints:
         assert footprint.id in expected_ids
         assert footprint.specVersion == "1.0.0"
+
+
+def test_count_product_footprints(two_product_footprints, db_session):
+    expected_count = 2
+    actual_count = count_product_footprints(db_session)
+
+    assert actual_count == expected_count
