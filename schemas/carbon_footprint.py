@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List
 
-from pydantic import field_validator, BaseModel
+from pydantic import field_validator, BaseModel, Field
 
 
 class CarbonFootprint(BaseModel):
@@ -16,8 +16,8 @@ class CarbonFootprint(BaseModel):
     crossSectoralStandardsUsed: List[str]
     productOrSectorSpecificRules: List[str]
     boundaryProcessesDescription: str
-    referencePeriodStart: datetime
-    referencePeriodEnd: datetime
+    referencePeriodStart: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    referencePeriodEnd: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     exemptedEmissionsPercent: float
     exemptedEmissionsDescription: str
     packagingEmissionsIncluded: bool

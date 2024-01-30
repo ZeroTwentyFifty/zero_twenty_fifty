@@ -19,8 +19,8 @@ def valid_carbon_footprint_data():
         "crossSectoralStandardsUsed": ["PAS 2050"],
         "productOrSectorSpecificRules": ["CFS Guidance for XYZ Sector"],
         "boundaryProcessesDescription": "Description of boundary processes",
-        "referencePeriodStart": datetime(2023, 1, 1),
-        "referencePeriodEnd": datetime(2023, 12, 31),
+        "referencePeriodStart": datetime(2023, 1, 1).isoformat(),
+        "referencePeriodEnd": datetime(2023, 12, 31).isoformat(),
         "exemptedEmissionsPercent": 2.5,
         "exemptedEmissionsDescription": "Description of exempted emissions",
         "packagingEmissionsIncluded": True
