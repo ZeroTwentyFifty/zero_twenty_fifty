@@ -33,4 +33,5 @@ class ProductFootprint(BaseModel):
         valid_statuses = ['Active', 'Deprecated']
         assert v in valid_statuses, f"Status must be one of the following: {', '.join(valid_statuses)}"
         return v
+
     model_config = ConfigDict(from_attributes=True)
