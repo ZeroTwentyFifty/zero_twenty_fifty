@@ -1,4 +1,6 @@
 import pytest
+from fastapi import HTTPException
+
 from core.exceptions import (
     AccessDeniedException,
     BadRequestException,
@@ -52,9 +54,19 @@ def test_token_expired_exception():
     assert exc_info.value.detail == "The specified access token has expired"
 
 
-def test_internal_error():
+def test_internal_error_exception():
     with pytest.raises(InternalErrorException) as exc_info:
         raise InternalErrorException()
 
     assert exc_info.value.status_code == 500
     assert exc_info.value.detail == "An internal or unexpected error has occurred"
+
+
+def test_exception_module_inheritance():
+    """
+    Only implemented for one of our custom implemented Exception classes
+    due to the unlikeliness of implementation drift for only one exception class,
+    if one of them stop inheriting from there, probably all of them will, and thus
+    this test will break.
+    """
+    assert issubclass(AccessDeniedException, HTTPException)
