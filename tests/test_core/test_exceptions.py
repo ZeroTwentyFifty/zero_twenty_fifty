@@ -9,7 +9,7 @@ from core.exceptions import (
 )
 
 
-def test_access_denied():
+def test_access_denied_exception():
     with pytest.raises(AccessDeniedException) as exc_info:
         raise AccessDeniedException()
 
@@ -17,7 +17,7 @@ def test_access_denied():
     assert exc_info.value.detail == "Access denied"
 
 
-def test_bad_request():
+def test_bad_request_exception():
     with pytest.raises(BadRequestException) as exc_info:
         raise BadRequestException()
 
@@ -25,7 +25,7 @@ def test_bad_request():
     assert exc_info.value.detail == "Bad Request"
 
 
-def test_no_such_footprint():
+def test_no_such_footprint_exception():
     with pytest.raises(NoSuchFootprintException) as exc_info:
         raise NoSuchFootprintException()
 
@@ -33,7 +33,7 @@ def test_no_such_footprint():
     assert exc_info.value.detail == "The specified footprint does not exist"
 
 
-def test_not_implemented():
+def test_not_implemented_exception():
     with pytest.raises(NotImplementedException) as exc_info:
         raise NotImplementedException()
 
@@ -44,7 +44,7 @@ def test_not_implemented():
     )
 
 
-def test_token_expired():
+def test_token_expired_exception():
     with pytest.raises(TokenExpiredException) as exc_info:
         raise TokenExpiredException()
 
