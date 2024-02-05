@@ -24,3 +24,10 @@ def test_get_events(client, access_token: str):
         "message": "The specified Action or header you provided implies functionality that is not implemented",
         "code": "NotImplemented"
     }
+
+
+def test_get_events_unauthenticated(client):
+    response = client.post("/events")
+
+    assert response.status_code == 403
+    assert "AccessDenied" in response.text
