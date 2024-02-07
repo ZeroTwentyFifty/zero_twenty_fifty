@@ -25,18 +25,44 @@ time to understand some of the more arcane parts of it.
 
 
 class JSONAPIParams(BaseModel, AbstractParams):
+    """
+    Defines pagination parameters compliant with the JSON:API specification.
+    Inherits from AbstractParams (provided by the 'fastapi-pagination' library).
+
+    Attributes:
+        offset (int): Starting index for data retrieval (defaults to 1, minimum 1).
+        limit (int): Maximum number of items to fetch per page (defaults to 10, between 1 and 100).
+
+    Testing Notes:
+        * Test this model directly with unit tests. Verify that different
+          combinations of 'offset' and 'limit' are constructed and validated correctly.
+    """
     offset: int = Query(1, ge=1)
     limit: int = Query(10, ge=1, le=100)
 
     def to_raw_params(self) -> RawParams:
+        """
+        Converts JSONAPIParams into a simpler 'RawParams' format used internally
+        by the pagination library.
+        """
         return RawParams(limit=self.limit, offset=self.offset)
 
 
 class JSONAPIPageInfoMeta(BaseModel):
+    """
+    Model to hold metadata about a specific page within a JSON:API paginated response.
+
+    Attributes:
+        total (int): Total number of records matching the query.
+    """
     total: int
 
 
 class JSONAPIPageMeta(BaseModel):
+    """
+    Model for representing pagination metadata in the JSON:API format.
+    (Currently incomplete)
+    """
     page: JSONAPIPageInfoMeta
 
 
@@ -44,6 +70,22 @@ T = TypeVar("T")
 
 
 class JSONAPIPage(AbstractPage[T], Generic[T]):
+    """
+    Represents a single page of results in a JSON:API compliant response.
+
+    Attributes:
+        data (Sequence[T]): The list of data items for the current page.
+        __params_type__ (JSONAPIParams): Specifies the expected pagination parameter type.
+
+    Methods:
+        create(cls, items, params, *, total, **kwargs): Creates a JSONAPIPage object.
+            Requires total record count for proper pagination metadata generation.
+
+    Testing Notes:
+        * Create unit tests for this class as well. Focus on:
+            * Correct creation of JSONAPIPage objects with varying data, parameters, and total counts.
+            * If/when 'meta' attributes are implemented, ensure they are serialized as expected.
+    """
     data: Sequence[T]
     #meta: JSONAPIPageMeta
 
@@ -69,6 +111,21 @@ class JSONAPIPage(AbstractPage[T], Generic[T]):
 
 
 class PaginationMiddleware(BaseHTTPMiddleware):
+    """
+    Starlette middleware to intercept API responses and add pagination-related headers.
+
+    Responsibilities:
+        1. Counts total product footprints in the database.
+        2. Calculates the URL for the 'next' page of results (if applicable).
+        3. Adds a 'Link' header to the response, guiding clients on how to fetch the next data set.
+
+    Testing Notes:
+        * Consider extracting link-generation logic into a separate, testable helper function.
+        * Use mocking to replace 'count_product_footprints' in endpoint tests. This lets you focus on
+          pagination behavior without requiring a live database.
+        * Write a few integration tests focused on the middleware, where realistic requests
+          trigger Link header creation.
+    """
     async def dispatch(self, request: Request, call_next):
         response = await call_next(request)
 
@@ -89,4 +146,5 @@ class PaginationMiddleware(BaseHTTPMiddleware):
             if next_offset < product_footprint_count:
                 response.headers['Link'] = f'<{next_url}>; rel="next"'
                 print(f"link: {response.headers['Link']}")
+
         return response
