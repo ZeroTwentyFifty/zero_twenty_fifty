@@ -30,7 +30,7 @@ Now you'll have to activate the shell to  have access to your poetry installed p
 
 Finally, you can run this to access a local dev environment:
 
-uvicorn main:app
+    uvicorn main:app
 
 You can verify that the thing has launched correctly by going to:
 
