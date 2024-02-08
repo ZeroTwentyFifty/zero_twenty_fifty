@@ -7,8 +7,8 @@ from pydantic import field_validator, BaseModel, Field
 class CarbonFootprint(BaseModel):
     declaredUnit: str
     unitaryProductAmount: int
-    pCfExcludingBiogenic: int
-    pCfIncludingBiogenic: int
+    pCfExcludingBiogenic: float
+    pCfIncludingBiogenic: float
     fossilGhgEmissions: int
     fossilCarbonContent: int
     biogenicCarbonContent: int
