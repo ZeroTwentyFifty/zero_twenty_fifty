@@ -48,24 +48,6 @@ class JSONAPIParams(BaseModel, AbstractParams):
         return RawParams(limit=self.limit, offset=self.offset)
 
 
-class JSONAPIPageInfoMeta(BaseModel):
-    """
-    Model to hold metadata about a specific page within a JSON:API paginated response.
-
-    Attributes:
-        total (int): Total number of records matching the query.
-    """
-    total: int
-
-
-class JSONAPIPageMeta(BaseModel):
-    """
-    Model for representing pagination metadata in the JSON:API format.
-    (Currently incomplete)
-    """
-    page: JSONAPIPageInfoMeta
-
-
 T = TypeVar("T")
 
 
@@ -87,7 +69,6 @@ class JSONAPIPage(AbstractPage[T], Generic[T]):
             * If/when 'meta' attributes are implemented, ensure they are serialized as expected.
     """
     data: Sequence[T]
-    #meta: JSONAPIPageMeta
 
     __params_type__ = JSONAPIParams
 
@@ -105,7 +86,6 @@ class JSONAPIPage(AbstractPage[T], Generic[T]):
 
         return cls(
             data=items,
-            #meta={"page": {"total": total}},
             **kwargs,
         )
 
