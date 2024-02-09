@@ -18,6 +18,8 @@ from db.session import get_db
 from db.repository.users import create_new_user
 from apis.base import api_router
 from schemas.user import UserCreate
+from core.pagination import PaginationMiddleware
+from fastapi_pagination import add_pagination
 
 
 def start_application():
@@ -41,6 +43,8 @@ def app() -> Generator[FastAPI, Any, None]:
     """
     Base.metadata.create_all(engine)
     _app = start_application()
+    add_pagination(_app)
+
     yield _app
     Base.metadata.drop_all(engine)
 
