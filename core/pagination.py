@@ -84,8 +84,10 @@ class JSONAPIPage(AbstractPage[T], Generic[T]):
         assert isinstance(params, JSONAPIParams)
         assert total is not None
 
+        page_data = items[params.offset - 1 : params.offset - 1 + params.limit]
+
         return cls(
-            data=items,
+            data=page_data,
             **kwargs,
         )
 
