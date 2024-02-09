@@ -84,12 +84,18 @@ class JSONAPIPage(AbstractPage[T], Generic[T]):
         assert isinstance(params, JSONAPIParams)
         assert total is not None
 
-        page_data = items[params.offset - 1 : params.offset - 1 + params.limit]
+        page_data = cls._get_page_data(items=items, params=params)
 
         return cls(
             data=page_data,
             **kwargs,
         )
+
+    @staticmethod
+    def _get_page_data(*, items: Sequence[T], params: JSONAPIParams) -> Sequence[T]:
+        start_index: int = params.offset -1
+        finish_index: int = start_index + params.limit
+        return items[start_index: finish_index]
 
 
 class PaginationMiddleware(BaseHTTPMiddleware):
