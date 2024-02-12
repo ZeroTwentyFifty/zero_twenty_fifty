@@ -93,7 +93,7 @@ class JSONAPIPage(AbstractPage[T], Generic[T]):
 
     @staticmethod
     def _get_page_data(*, items: Sequence[T], params: JSONAPIParams) -> Sequence[T]:
-        start_index: int = params.offset -1
+        start_index: int = params.offset - 1
         finish_index: int = start_index + params.limit
         return items[start_index: finish_index]
 
