@@ -1,3 +1,6 @@
+import json
+import uuid
+
 import pytest
 
 
@@ -135,19 +138,20 @@ def test_read_product_footprint(client, access_token):
 
 
 """
-TODO: re-enable this test when the pagination module is improved and cleaned up, the
-    code for pagination throws runtime errors when tested programatically, as it was
-    jacked from somewhere else in order to get it running, it needs to be looked over
-    in a more structured way.
-
-def test_read_product_footprints(client, access_token, valid_json_product_footprint):
-    headers = {"Authorization": f"Bearer {access_token}"}
-
-    client.post(url="/footprints/create-product-footprint/", json=json.dumps(valid_json_product_footprint))
-    client.post(url="/footprints/create-product-footprint/", json=json.dumps(valid_json_product_footprint))
-
-    response = client.get("/footprints/?offset=1&limit=10", headers=headers)
-    assert response.status_code == 200
-    assert response.json()[0]
-    assert response.json()[1]
+This tests is currently succeeding but only because the create-product-footprint
+calls are failing and so there's nothing in there, the API does actually work, but
+this test does not, come back to this once the data model is in better shape.
 """
+# def test_read_product_footprints(client, access_token, valid_json_product_footprint):
+#     headers = {"Authorization": f"Bearer {access_token}"}
+#
+#     valid_json_product_footprint["id"] = str(uuid.uuid4())
+#
+#     post_response = client.post(url="/footprints/create-product-footprint/", json=json.dumps(valid_json_product_footprint), headers=headers)
+#     client.post(url="/footprints/create-product-footprint/", json=json.dumps(valid_json_product_footprint))
+#     assert post_response.json() == "Success"
+#     response = client.get("/footprints/?offset=1&limit=10", headers=headers)
+#     assert response.status_code == 200
+#     print(response.json()["data"])
+#     assert response.json()["data"]
+#     # assert response.json()[1]
