@@ -34,13 +34,15 @@ def valid_carbon_footprint_data():
 @pytest.fixture(scope="function")
 def valid_product_footprint_data(valid_carbon_footprint_data):
     data = {
+        "id": "499a282c-03dc-48eb-8381-2c08c0d55379",
         "specVersion": "1.0.0",
         "version": 1,
+        "created": datetime(2023, 1, 1).isoformat(),
         "status": "Active",
         "companyName": "Test Company",
-        "companyIds": ["test-company-id-1", "test-company-id-2"],
+        "companyIds": ["urn:pathfinder:company:customcode:buyer-assigned:4321", "urn:pathfinder:company:customcode:vendor-assigned:$custom-company-code"],
         "productDescription": "Test Product",
-        "productIds": ["test-product-id-1", "test-product-id-2"],
+        "productIds": ["urn:example:foo-bar:baz-qux:1234", "urn:example:foo-bar:baz-qux:1235"],
         "productCategoryCpc": "12345678",
         "productNameCompany": "Test Product by Test Company",
         "comment": "This was calculated very well.",
