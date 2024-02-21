@@ -2,17 +2,35 @@ from __future__ import annotations
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from pydantic import AnyUrl, NaiveDatetime, BaseModel, Field, conint, UUID4
+from pydantic import AwareDatetime, BaseModel, Field, conint, UUID4
 
 from schemas.carbon_footprint import CarbonFootprint
 
 
-class Status(Enum):
-    Active = 'Active'
-    Deprecated = 'Deprecated'
+class ProductFootprintStatus(Enum):
+    """
+    Status of a product footprint.
+
+    Attributes:
+        ACTIVE: The default status of a product footprint. A product footprint with
+                status Active can be used by data recipients, e.g., for product
+                footprint calculations.
+        DEPRECATED: The product footprint is deprecated and should not be used for
+                    e.g., product footprint calculations by data recipients.
+    """
+
+    ACTIVE = "Active"
+    DEPRECATED = "Deprecated"
 
 
 class ProductFootprint(BaseModel):
+    """
+    CompanyIds and ProductIds field validation is wrong, should be a list of URN's,
+    not `str`.
+
+    See Also:
+        https://wbcsd.github.io/tr/2023/data-exchange-protocol-20231207/#dt-pf
+    """
     id: UUID4 = Field(..., description='The product footprint identifier.')
     specVersion: str = Field(
         ...,
@@ -27,15 +45,15 @@ class ProductFootprint(BaseModel):
         ...,
         description='The version of the ProductFootprint with value an integer in the inclusive range of 0..2^31-1.',
     )
-    created: NaiveDatetime = Field(
+    created: AwareDatetime = Field(
         ...,
         description="A ProductFootprint MUST include the property 'created' with value the timestamp of the creation of the ProductFootprint.",
     )
-    updated: Optional[NaiveDatetime] = Field(
+    updated: Optional[AwareDatetime] = Field(
         None,
         description="A ProductFootprint SHOULD include the property 'updated' with value the timestamp of the ProductFootprint update. A ProductFootprint MUST NOT include this property if an update has never been performed. The timestamp MUST be in UTC.",
     )
-    status: Status = Field(
+    status: ProductFootprintStatus = Field(
         ...,
         description="Each ProductFootprint MUST include the property 'status' with value one of the following values: Active or Deprecated.",
     )
@@ -43,11 +61,11 @@ class ProductFootprint(BaseModel):
         None,
         description='If defined, the value should be a message explaining the reason for the current status.',
     )
-    validityPeriodStart: Optional[NaiveDatetime] = Field(
+    validityPeriodStart: Optional[AwareDatetime] = Field(
         None,
         description='If defined, the start of the validity period of the ProductFootprint.',
     )
-    validityPeriodEnd: Optional[NaiveDatetime] = Field(
+    validityPeriodEnd: Optional[AwareDatetime] = Field(
         None,
         description='The end (excluding) of the valid period of the ProductFootprint.',
     )
@@ -55,7 +73,7 @@ class ProductFootprint(BaseModel):
         ...,
         description='The name of the company that is the ProductFootprint Data Owner, with value a non-empty String.',
     )
-    companyIds: List[AnyUrl] = Field(
+    companyIds: List[str] = Field(
         ...,
         description='The non-empty set of Uniform Resource Names (URN). Each value of this set is supposed to uniquely identify the ProductFootprint Data Owner.',
     )
@@ -63,7 +81,7 @@ class ProductFootprint(BaseModel):
         ...,
         description='The free-form description of the product plus other information related to it such as production technology or packaging.',
     )
-    productIds: List[AnyUrl] = Field(
+    productIds: List[str] = Field(
         ...,
         description='The non-empty set of ProductIds. Each of the values in the set is supposed to uniquely identify the product. What constitutes a suitable product identifier depends on the product, the conventions, contracts, and agreements between the Data Owner and a Data Recipient and is out of the scope of this specification.',
         min_length=1,

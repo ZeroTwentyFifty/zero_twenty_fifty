@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest import mock
 
 import pytest
@@ -26,8 +26,8 @@ def valid_carbon_footprint_data():
         "crossSectoralStandardsUsed": ["PAS 2050"],
         "productOrSectorSpecificRules": ["CFS Guidance for XYZ Sector"],
         "boundaryProcessesDescription": "Description of boundary processes",
-        "referencePeriodStart": datetime(2023, 1, 1).isoformat(),
-        "referencePeriodEnd": datetime(2023, 12, 31).isoformat(),
+        "referencePeriodStart": datetime.now(timezone.utc).isoformat(),
+        "referencePeriodEnd": datetime.now(timezone.utc).isoformat(),
         "exemptedEmissionsPercent": 2.5,
         "exemptedEmissionsDescription": "Description of exempted emissions",
         "packagingEmissionsIncluded": True
@@ -39,13 +39,23 @@ def valid_carbon_footprint_data():
 @pytest.fixture(scope="module")
 def valid_product_footprint_data(valid_carbon_footprint_data):
     data = {
+        "id": "0c24b3eb-fb05-4353-ae08-a52ee051b392",
         "specVersion": "1.0.0",
         "version": 1,
+        "created": datetime.now(timezone.utc).isoformat(),
+        "updated": None,
         "status": "Active",
         "companyName": "Test Company",
-        "companyIds": ["test-company-id-1", "test-company-id-2"],
+        "companyIds": [
+            "urn:pathfinder:company:customcode:buyer-assigned:2874",
+            "urn:pathfinder:company:customcode:vendor-assigned:5492"
+        ],
         "productDescription": "Test Product",
-        "productIds": ["test-product-id-1", "test-product-id-2"],
+        "productIds": [
+            "urn:pathfinder:product:customcode:buyer-assigned:7329",
+            "urn:pathfinder:product:customcode:vendor-assigned:2287",
+            "urn:pathfinder: product:id: cas:50 - 00 - 0"
+        ],
         "productCategoryCpc": "12345678",
         "productNameCompany": "Test Product by Test Company",
         "comment": "This was calculated very well.",
