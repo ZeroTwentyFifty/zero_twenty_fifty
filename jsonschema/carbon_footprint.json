@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/carbonfootprint.json",
+  "title": "CarbonFootprint",
+  "description": "Represents a product's carbon footprint in accordance with the Pathfinder Framework",
+  "type": "object",
+  "properties": {
+    "declaredUnit": {
+      "type": "string",
+      "description": "The unit of analysis of the product."
+    },
+    "unitaryProductAmount": {
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMinimum": true,
+      "description": "Amount of declared units in the product (must be greater than 0)."
+    },
+    "pCfExcludingBiogenic": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Product carbon footprint excluding biogenic CO2 emissions (kgCO2e/declaredUnit)."
+    },
+    "pCfIncludingBiogenic": {
+      "type": "number",
+      "description": "Product carbon footprint including all biogenic emissions (kgCO2e/declaredUnit)."
+    },
+    "fossilGhgEmissions": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Emissions from fossil sources (kgCO2e/declaredUnit)."
+    },
+    "fossilCarbonContent": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Fossil carbon content of the product (kgC/declaredUnit)."
+    },
+    "biogenicCarbonContent": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Biogenic carbon content of the product (kgC/declaredUnit)."
+    },
+    "dLucGhgEmissions": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Emissions from recent direct land use change (kgCO2e/declaredUnit)."
+    },
+    "landManagementGhgEmissions": {
+      "type": "number",
+      "description": "Emissions/removals from land management (kgCO2e/declaredUnit)."
+    },
+    "otherBiogenicGhgEmissions": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Other biogenic GHG emissions not in dLUC or landManagement (kgCO2e/declaredUnit)."
+    },
+    "iLucGhgEmissions": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Emissions from recent indirect land use change (kgCO2e/declaredUnit)."
+    },
+    "biogenicCarbonWithdrawal": {
+      "type": "number",
+      "maximum": 0,
+      "description": "Biogenic carbon contained in the product converted to kgCO2e (must be less than or equal to zero)."
+    },
+    "aircraftGhgEmissions": {
+      "type": "number",
+      "minimum": 0,
+      "description": "GHG emissions from aircraft usage for product transport (kgCO2e/declaredUnit)."
+    },
+    "characterizationFactors": {
+      "type": "string",
+      "enum": ["AR5", "AR6"],
+      "description": "The IPCC Global Warming Potential characterization factors used."
+    },
+    "crossSectoralStandardsUsed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Cross-sectoral standards applied for calculating GHG emissions."
+    },
+    "productOrSectorSpecificRules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+       },
+      "description": "Product- or sector-specific rules for calculating GHG emissions."
+    },
+    "biogenicAccountingMethodology": {
+      "type": "string",
+      "enum": ["PEF", "ISO", "GHGP", "Quantis"],
+      "description": "The standard followed to account for biogenic emissions and removals."
+    },
+    "boundaryProcessesDescription": {
+      "type": "string",
+      "description": "Description of processes included in each lifecycle stage."
+    },
+    "referencePeriodStart": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start of the time boundary for the PCF (ISO 8601)"
+    },
+    "referencePeriodEnd": {
+      "type": "string",
+      "format": "date-time",
+      "description": "End of the time boundary for the PCF (ISO 8601)"
+    },
+    "geographyCountrySubdivision": {
+      "type": "string",
+      "description": "ISO 3166-2 Subdivision Code if applicable."
+    },
+    "geographyCountry": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "description": "ISO 3166 Country Code if applicable."
+    },
+    "geographyRegionOrSubregion": {
+      "type": "string",
+      "description": "Region or Subregion if applicable."
+    },
+    "secondaryEmissionFactorSources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of emission factor sources for secondary data, if used."
+    },
+    "exemptedEmissionsPercent": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 5,
+      "description": "Percentage of emissions exempted from PCF (0 to 5)."
+    },
+    "exemptedEmissionsDescription": {
+      "type": "string",
+      "description": "Reasoning for excluding emissions."
+    },
+    "packagingEmissionsIncluded": {
+      "type": "boolean",
+      "description": "Indicates if packaging emissions are in the PCF."
+    },
+    "packagingGhgEmissions": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Emissions from product packaging (kgCO2e/declaredUnit)."
+    },
+    "allocationRulesDescription": {
+      "type": "string",
+      "description": "Description of any allocation rules applied."
+    },
+    "uncertaintyAssessmentDescription": {
+      "type": "string",
+      "description": "Description of the uncertainty assessment."
+    },
+    "primaryDataShare": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "The share of primary data in percent."
+    },
+    "dqi": {
+      "type": "object",
+      "description": "Data Quality Indicators, if applicable.",
+      "properties": {
+      }
+    },
+    "assurance": {
+      "type": "object",
+      "description": "Assurance information, if applicable.",
+      "properties": {
+      }
+    }
+  },
+  "required": [
+    "declaredUnit",
+    "unitaryProductAmount",
+    "pCfExcludingBiogenic",
+    "fossilGhgEmissions",
+    "fossilCarbonContent",
+    "biogenicCarbonContent",
+    "characterizationFactors",
+    "crossSectoralStandardsUsed",
+    "boundaryProcessesDescription",
+    "referencePeriodStart",
+    "referencePeriodEnd",
+    "exemptedEmissionsPercent",
+    "exemptedEmissionsDescription",
+    "packagingEmissionsIncluded"
+  ]
+}
