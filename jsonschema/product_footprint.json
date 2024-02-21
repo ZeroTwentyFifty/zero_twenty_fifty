@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ProductFootprint",
+  "description": "Represents the carbon footprint of a product under a specific scope and with values calculated in accordance with the Pathfinder Framework.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The product footprint identifier."
+    },
+    "specVersion": {
+      "type": "string",
+      "description": "The version of the ProductFootprint data specification with value [VERSION]. Advisement: Subsequent revisions will update this value according to Semantic Versioning 2.0.0 (https://semver.org/lang/en/)."
+    },
+    "precedingPfIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "If defined, MUST be a non-empty set of preceding product footprint identifiers without duplicates.",
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "version": {
+      "type": "integer",
+      "description": "The version of the ProductFootprint with value an integer in the inclusive range of 0..2^31-1.",
+      "minimum": 0,
+      "maximum": 2147483647
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "A ProductFootprint MUST include the property 'created' with value the timestamp of the creation of the ProductFootprint."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "A ProductFootprint SHOULD include the property 'updated' with value the timestamp of the ProductFootprint update. A ProductFootprint MUST NOT include this property if an update has never been performed. The timestamp MUST be in UTC."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Active", "Deprecated"],
+      "description": "Each ProductFootprint MUST include the property 'status' with value one of the following values: Active or Deprecated."
+    },
+    "statusComment": {
+      "type": "string",
+      "description": "If defined, the value should be a message explaining the reason for the current status."
+    },
+    "validityPeriodStart": {
+      "type": "string",
+      "format": "date-time",
+      "description": "If defined, the start of the validity period of the ProductFootprint."
+    },
+    "validityPeriodEnd": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The end (excluding) of the valid period of the ProductFootprint."
+    },
+    "companyName": {
+      "type": "string",
+      "description": "The name of the company that is the ProductFootprint Data Owner, with value a non-empty String."
+    },
+    "companyIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "description": "The non-empty set of Uniform Resource Names (URN). Each value of this set is supposed to uniquely identify the ProductFootprint Data Owner.",
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "productDescription": {
+      "type": "string",
+      "description": "The free-form description of the product plus other information related to it such as production technology or packaging."
+    },
+    "productIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The non-empty set of ProductIds. Each of the values in the set is supposed to uniquely identify the product. What constitutes a suitable product identifier depends on the product, the conventions, contracts, and agreements between the Data Owner and a Data Recipient and is out of the scope of this specification.",
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "productCategoryCpc": {
+      "type": "string",
+      "description": "A UN Product Classification Code (CPC) that the given product belongs to."
+    },
+    "productNameCompany": {
+      "type": "string",
+      "description": "The non-empty trade name of the product."
+    },
+    "comment": {
+      "type": "string",
+      "description": "The additional information related to the product footprint. Whereas the property ProductFootprint/productDescription contains product-level information, ProductFootprint/comment SHOULD be used for information and instructions related to the calculation of the footprint, or other information which informs the ability to interpret, to audit or to verify the Product Footprint."
+    },
+    "pcf": {
+      "type": "object",
+      "description": "The carbon footprint of the given product with value conforming to the data type CarbonFootprint."
+    },
+    "extensions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "If defined, 1 or more data model extensions associated with the ProductFootprint. ProductFootprint/extensions MUST be encoded as a non-empty JSON Array of DataModelExtension JSON objects.",
+      "minItems": 1
+    }
+  },
+  "required": [
+    "id",
+    "specVersion",
+    "version",
+    "created",
+    "status",
+    "companyName",
+    "companyIds",
+    "productDescription",
+    "productIds",
+    "productCategoryCpc",
+    "productNameCompany",
+    "comment",
+    "pcf"
+  ]
+}
