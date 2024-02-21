@@ -7,7 +7,7 @@ def test_product_footprint_creation(db_session):
         specVersion="1.0",
         version=1,
         created="2022-01-01",
-        status="Active",
+        status="ACTIVE",
         companyName="Test Company",
         companyIds=[],
         productDescription="Test Product",
@@ -24,7 +24,7 @@ def test_product_footprint_creation(db_session):
     assert product_footprint.specVersion == "1.0"
     assert product_footprint.version == 1
     assert product_footprint.created == "2022-01-01"
-    assert product_footprint.status == "Active"
+    assert product_footprint.status == ProductFootprintStatus.ACTIVE
     assert product_footprint.companyName == "Test Company"
     assert product_footprint.companyIds == []
     assert product_footprint.productDescription == "Test Product"
@@ -36,5 +36,5 @@ def test_product_footprint_creation(db_session):
 
 
 def test_product_footprint_status_values():
-    assert ProductFootprintStatus.ACTIVE == "Active"
-    assert ProductFootprintStatus.DEPRECATED == "Deprecated"
+    assert ProductFootprintStatus.ACTIVE.value == "Active"
+    assert ProductFootprintStatus.DEPRECATED.value == "Deprecated"
