@@ -1,29 +1,21 @@
-from apis.base import api_router
-from core.config import settings
-from db.base import Base
-from db.session import engine
-from core.pagination import PaginationMiddleware
-from fastapi import FastAPI, Request, Header, status
-from fastapi.exceptions import RequestValidationError
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.exceptions import RequestValidationError, HTTPException
+from fastapi.encoders import jsonable_encoder
 from fastapi_pagination import add_pagination
 from fastapi.responses import JSONResponse
-from fastapi.exceptions import HTTPException
-from fastapi.encoders import jsonable_encoder
+
+from apis.base import api_router
+from core.config import settings
+from core.pagination import PaginationMiddleware
 
 
 def include_router(app):
     app.include_router(api_router)
 
 
-def create_tables():
-    Base.metadata.create_all(bind=engine)
-
-
 def start_application():
     app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
     include_router(app)
-    create_tables()
     add_pagination(app)
     return app
 
