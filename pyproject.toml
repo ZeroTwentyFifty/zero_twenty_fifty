@@ -21,6 +21,7 @@ pycountry = "^22.3.5"
 urnparse = "^0.2.0"
 uvicorn = "^0.23.1"
 bump-pydantic = "^0.7.0"
+alembic = "^1.13.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
