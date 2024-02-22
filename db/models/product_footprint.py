@@ -5,8 +5,6 @@ from schemas.product_footprint import ProductFootprintStatus
 
 
 class ProductFootprint(Base):
-    __tablename__ = "productfootprints"
-
     pk = Column(Integer, primary_key=True, autoincrement=True)
     id = Column(String, index=True, comment="The product footprint identifier.")
     precedingPfIds = Column(JSON, comment="non-empty set of preceding product footprint identifiers without duplicates.")
