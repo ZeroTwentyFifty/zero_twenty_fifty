@@ -10,22 +10,39 @@ from schemas.product_footprint import ProductFootprint
 @pytest.fixture(scope="function")
 def valid_carbon_footprint_data():
     data = {
-        "declaredUnit": "kgCO2e/kg",
+        "declaredUnit": "kilogram",
         "unitaryProductAmount": 100,
         "pCfExcludingBiogenic": 10,
         "pCfIncludingBiogenic": 12,
         "fossilGhgEmissions": 8,
         "fossilCarbonContent": 5,
         "biogenicCarbonContent": 4,
-        "characterizationFactors": "IPCC 2013",
+        "dLucGhgEmissions": 2,
+        "landManagementGhgEmissions": 3,
+        "otherBiogenicGhgEmissions": 1,
+        "iLucGhgEmissions": 2,
+        "biogenicCarbonWithdrawal": -1,
+        "aircraftGhgEmissions": 0.5,
+        "characterizationFactors": "AR6",
         "crossSectoralStandardsUsed": ["PAS 2050"],
         "productOrSectorSpecificRules": ["CFS Guidance for XYZ Sector"],
+        "biogenicAccountingMethodology": "PEF",
         "boundaryProcessesDescription": "Description of boundary processes",
-        "referencePeriodStart": datetime.now(timezone.utc).isoformat(),
-        "referencePeriodEnd": datetime.now(timezone.utc).isoformat(),
+        "referencePeriodStart": datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
+        "referencePeriodEnd": datetime(2023, 12, 31, tzinfo=timezone.utc).isoformat(),
+        "geographyCountrySubdivision": "AU",
+        "geographyCountry": "AU",
+        "geographyRegionOrSubregion": "Australia and New Zealand",
+        "secondaryEmissionFactorSources": ["Source 1", "Source 2"],
         "exemptedEmissionsPercent": 2.5,
         "exemptedEmissionsDescription": "Description of exempted emissions",
-        "packagingEmissionsIncluded": True
+        "packagingEmissionsIncluded": True,
+        "packagingGhgEmissions": 0.5,
+        "allocationRulesDescription": "Description of allocation rules",
+        "uncertaintyAssessmentDescription": "Description of uncertainty assessment",
+        "primaryDataShare": 50,
+        "dqi": {"key1": "value1", "key2": "value2"},
+        "assurance": {"key1": "value1", "key2": "value2"}
     }
 
     return data
@@ -59,7 +76,7 @@ def test_product_footprint_schema_validation(valid_product_footprint_data):
     assert isinstance(footprint.id, UUID)
     assert footprint.specVersion == "1.0.0"
     assert footprint.companyName == "Test Company"
-    assert footprint.pcf.declaredUnit == "kgCO2e/kg"  # Example assertion for nested model
+    assert footprint.pcf.declaredUnit == "kilogram"  # Example assertion for nested model
 
 
 def test_product_footprint_missing_version(valid_product_footprint_data):

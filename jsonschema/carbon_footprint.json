@@ -6,8 +6,7 @@
   "type": "object",
   "properties": {
     "declaredUnit": {
-      "type": "string",
-      "description": "The unit of analysis of the product."
+      "$ref": "#/definitions/DeclaredUnit"
     },
     "unitaryProductAmount": {
       "type": "number",
@@ -115,10 +114,7 @@
       "pattern": "^[A-Z]{2}$",
       "description": "ISO 3166 Country Code if applicable."
     },
-    "geographyRegionOrSubregion": {
-      "type": "string",
-      "description": "Region or Subregion if applicable."
-    },
+    "geographyRegionOrSubregion": { "$ref": "#/definitions/RegionOrSubregion" },
     "secondaryEmissionFactorSources": {
       "type": "array",
       "items": {
@@ -187,5 +183,49 @@
     "exemptedEmissionsPercent",
     "exemptedEmissionsDescription",
     "packagingEmissionsIncluded"
-  ]
+  ],
+  "definitions": {
+    "DeclaredUnit": {
+      "type": "string",
+      "description": "The unit of analysis of the product.",
+      "enum": [
+        "liter",
+        "kilogram",
+        "cubic meter",
+        "kilowatt hour",
+        "megajoule",
+        "ton kilometer",
+        "square meter"
+      ]
+    },
+    "RegionOrSubregion": {
+      "title": "RegionOrSubregion",
+      "description": "Represents the UN geographic regions and subregions.",
+      "type": "string",
+      "enum": [
+        "Africa",
+        "Americas",
+        "Asia",
+        "Europe",
+        "Oceania",
+        "Australia and New Zealand",
+        "Central Asia",
+        "Eastern Asia",
+        "Eastern Europe",
+        "Latin America and the Caribbean",
+        "Melanesia",
+        "Micronesia",
+        "Northern Africa",
+        "Northern America",
+        "Northern Europe",
+        "Polynesia",
+        "South-eastern Asia",
+        "Southern Asia",
+        "Southern Europe",
+        "Sub-Saharan Africa",
+        "Western Asia",
+        "Western Europe"
+      ]
+    }
+  }
 }

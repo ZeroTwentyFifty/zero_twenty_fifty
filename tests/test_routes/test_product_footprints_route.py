@@ -32,7 +32,7 @@ def valid_json_product_footprint():
         "comment": "string",
         "pcf": {
             "declaredUnit": "liter",
-            "unitaryProductAmount": 0,
+            "unitaryProductAmount": 1,
             "pCfExcludingBiogenic": 0,
             "pCfIncludingBiogenic": 0,
             "fossilGhgEmissions": 0,
@@ -44,7 +44,7 @@ def valid_json_product_footprint():
             "ilucGhgEmissions": 0,
             "biogenicCarbonWithdrawal": 0,
             "aircraftGhgEmissions": 0,
-            "characterizationFactors": "string",
+            "characterizationFactors": "AR6",
             "crossSectoralStandardsUsed": [
                     "GHG Protocol Product standard"
             ],
@@ -56,18 +56,9 @@ def valid_json_product_footprint():
             "referencePeriodStart": "2023-06-18T22:38:02.332Z",
             "referencePeriodEnd": "2023-06-18T22:38:02.332Z",
             "geographyCountrySubdivision": "string",
-            "geographyCountry": {
-                "code": "AU"
-            },
-            "geographyRegionOrSubregion": "Africa",
-            "secondaryEmissionFactorSources": {
-                "datasets": [
-                    {
-                        "name": "string",
-                        "version": "string"
-                    }
-                ]
-            },
+            "geographyCountry": "AU",
+            "geographyRegionOrSubregion": "Australia and New Zealand",
+            "secondaryEmissionFactorSources": ["Ecoinvent"],
             "exemptedEmissionsPercent": 0,
             "exemptedEmissionsDescription": "string",
             "packagingEmissionsIncluded": True,
