@@ -25,7 +25,7 @@ jobs:
           poetry install
       - name: Run tests and generate coverage
         run: |
-          poetry run pytest --cov=. --cov-report=xml
+          poetry run pytest --cov=.
       - name: Run linter
         continue-on-error: true
         run: |
