@@ -1,25 +1,26 @@
 import os
 import sys
+from datetime import datetime, timezone
 from typing import Any
 from typing import Generator
 
+import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-import pytest
+from fastapi_pagination import add_pagination
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # this is to include backend dir in sys.path so that we can import from db,main.py
 
+from apis.base import api_router
 from db.base import Base
 from db.session import get_db
 from db.repository.users import create_new_user
-from apis.base import api_router
 from schemas.user import UserCreate
-from core.pagination import PaginationMiddleware
-from fastapi_pagination import add_pagination
+
+
 
 
 def start_application():
@@ -99,3 +100,48 @@ set itself up easily. A good place to start would probably be just learning a bi
 about good quality fixture organisation in Pytest.
 """
 
+
+@pytest.fixture(scope="module")
+def valid_carbon_footprint_data():
+    data = {
+        "declaredUnit": "kilogram",
+        "unitaryProductAmount": 100,
+        "pCfExcludingBiogenic": 10,
+        "pCfIncludingBiogenic": 12,
+        "fossilGhgEmissions": 8,
+        "fossilCarbonContent": 5,
+        "biogenicCarbonContent": 4,
+        "dLucGhgEmissions": 2,
+        "landManagementGhgEmissions": 3,
+        "otherBiogenicGhgEmissions": 1,
+        "iLucGhgEmissions": 2,
+        "biogenicCarbonWithdrawal": -1,
+        "aircraftGhgEmissions": 0.5,
+        "characterizationFactors": "AR6",
+        "crossSectoralStandardsUsed": ["PAS 2050"],
+        "productOrSectorSpecificRules": ["CFS Guidance for XYZ Sector"],
+        "biogenicAccountingMethodology": "PEF",
+        "boundaryProcessesDescription": "Description of boundary processes",
+        "referencePeriodStart": datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
+        "referencePeriodEnd": datetime(2023, 12, 31, tzinfo=timezone.utc).isoformat(),
+        "geographyCountrySubdivision": "AU",
+        "geographyCountry": "AU",
+        "geographyRegionOrSubregion": "Australia and New Zealand",
+        "secondaryEmissionFactorSources": [
+            {
+                "name": "ecoinvent",
+                "version": "3.9.1"
+            }
+        ],
+        "exemptedEmissionsPercent": 2.5,
+        "exemptedEmissionsDescription": "Description of exempted emissions",
+        "packagingEmissionsIncluded": True,
+        "packagingGhgEmissions": 0.5,
+        "allocationRulesDescription": "Description of allocation rules",
+        "uncertaintyAssessmentDescription": "Description of uncertainty assessment",
+        "primaryDataShare": 50,
+        "dqi": {"key1": "value1", "key2": "value2"},
+        "assurance": {"key1": "value1", "key2": "value2"}
+    }
+
+    return data

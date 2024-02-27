@@ -243,7 +243,7 @@ class CarbonFootprint(BaseModel):
         None, description='ISO 3166 Country Code if applicable.'
     )
     geographyRegionOrSubregion: Optional[RegionOrSubregion] = None
-    secondaryEmissionFactorSources: Optional[List[str]] = Field(
+    secondaryEmissionFactorSources: Optional[List[EmissionFactorDS]] = Field(
         None, description='List of emission factor sources for secondary data, if used.'
     )
     exemptedEmissionsPercent: confloat(ge=0.0, le=5.0) = Field(

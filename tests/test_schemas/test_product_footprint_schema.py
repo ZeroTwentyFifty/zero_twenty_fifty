@@ -8,47 +8,6 @@ from schemas.product_footprint import ProductFootprint
 
 
 @pytest.fixture(scope="function")
-def valid_carbon_footprint_data():
-    data = {
-        "declaredUnit": "kilogram",
-        "unitaryProductAmount": 100,
-        "pCfExcludingBiogenic": 10,
-        "pCfIncludingBiogenic": 12,
-        "fossilGhgEmissions": 8,
-        "fossilCarbonContent": 5,
-        "biogenicCarbonContent": 4,
-        "dLucGhgEmissions": 2,
-        "landManagementGhgEmissions": 3,
-        "otherBiogenicGhgEmissions": 1,
-        "iLucGhgEmissions": 2,
-        "biogenicCarbonWithdrawal": -1,
-        "aircraftGhgEmissions": 0.5,
-        "characterizationFactors": "AR6",
-        "crossSectoralStandardsUsed": ["PAS 2050"],
-        "productOrSectorSpecificRules": ["CFS Guidance for XYZ Sector"],
-        "biogenicAccountingMethodology": "PEF",
-        "boundaryProcessesDescription": "Description of boundary processes",
-        "referencePeriodStart": datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
-        "referencePeriodEnd": datetime(2023, 12, 31, tzinfo=timezone.utc).isoformat(),
-        "geographyCountrySubdivision": "AU",
-        "geographyCountry": "AU",
-        "geographyRegionOrSubregion": "Australia and New Zealand",
-        "secondaryEmissionFactorSources": ["Source 1", "Source 2"],
-        "exemptedEmissionsPercent": 2.5,
-        "exemptedEmissionsDescription": "Description of exempted emissions",
-        "packagingEmissionsIncluded": True,
-        "packagingGhgEmissions": 0.5,
-        "allocationRulesDescription": "Description of allocation rules",
-        "uncertaintyAssessmentDescription": "Description of uncertainty assessment",
-        "primaryDataShare": 50,
-        "dqi": {"key1": "value1", "key2": "value2"},
-        "assurance": {"key1": "value1", "key2": "value2"}
-    }
-
-    return data
-
-
-@pytest.fixture(scope="function")
 def valid_product_footprint_data(valid_carbon_footprint_data):
     data = {
         "id": "499a282c-03dc-48eb-8381-2c08c0d55379",
