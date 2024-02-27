@@ -1,6 +1,3 @@
-import json
-import uuid
-
 import pytest
 
 
@@ -58,7 +55,12 @@ def valid_json_product_footprint():
             "geographyCountrySubdivision": "string",
             "geographyCountry": "AU",
             "geographyRegionOrSubregion": "Australia and New Zealand",
-            "secondaryEmissionFactorSources": ["Ecoinvent"],
+            "secondaryEmissionFactorSources": [
+                {
+                    "name": "ecoinvent",
+                    "version": "3.9.1"
+                }
+            ],
             "exemptedEmissionsPercent": 0,
             "exemptedEmissionsDescription": "string",
             "packagingEmissionsIncluded": True,
