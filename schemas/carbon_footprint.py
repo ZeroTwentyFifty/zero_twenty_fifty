@@ -1,11 +1,13 @@
 from __future__ import annotations
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Annotated
 
 from pydantic import (
     AwareDatetime, BaseModel, ConfigDict, Field, PositiveFloat, confloat, constr,
     field_serializer
 )
+
+from schemas.base_types import NonEmptyString
 
 
 class CharacterizationFactors(str, Enum):
@@ -131,6 +133,29 @@ class RegionOrSubregion(str, Enum):
     SUB_SAHARAN_AFRICA = 'Sub-Saharan Africa'
     WESTERN_ASIA = 'Western Asia'
     WESTERN_EUROPE = 'Western Europe'
+
+
+class EmissionFactorDS(BaseModel):
+    """Represents an EmissionFactorDS, referencing emission factor databases.
+
+    For further details, please refer to the Pathfinder Framework Section 4.1.3.2.
+
+    Attributes:
+        name (NonEmptyString): The name of the emission factor database. Must be non-empty.
+        version (NonEmptyString): The version of the emission factor database. Must be non-empty.
+
+    Each EmissionFactorDS MUST be encoded as a JSON object.
+    Example:
+        {
+          "name": "ecoinvent",
+          "version": "3.9.1"
+        }
+
+    For more information, please refer to the official documentation:
+        https://wbcsd.github.io/tr/2023/data-exchange-protocol-20231207/#dt-emissionfactords
+    """
+    name: NonEmptyString = Field(..., description="The non-empty name of the emission factor database.")
+    version: NonEmptyString = Field(..., description="The non-empty version of the emission factor database.")
 
 
 class CarbonFootprint(BaseModel):
