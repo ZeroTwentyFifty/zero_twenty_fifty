@@ -5,7 +5,7 @@ import pytest
 
 from schemas.carbon_footprint import (
     CarbonFootprint, RegionOrSubregion, DeclaredUnit, BiogenicAccountingMethodology,
-    CharacterizationFactors
+    CharacterizationFactors, CrossSectoralStandard
 )
 
 
@@ -29,7 +29,7 @@ def test_carbon_footprint_schema_validation(valid_carbon_footprint_data):
     assert json_footprint_data["biogenicCarbonWithdrawal"] == -1
     assert json_footprint_data["aircraftGhgEmissions"] == 0.5
     assert json_footprint_data["characterizationFactors"] == "AR6"
-    assert json_footprint_data["crossSectoralStandardsUsed"] == ["PAS 2050"]
+    assert json_footprint_data["crossSectoralStandardsUsed"] == ["GHG Protocol Product standard"]
     assert json_footprint_data["productOrSectorSpecificRules"] == ["CFS Guidance for XYZ Sector"]
     assert json_footprint_data["biogenicAccountingMethodology"] == "PEF"
     assert json_footprint_data["boundaryProcessesDescription"] == "Description of boundary processes"
@@ -131,3 +131,9 @@ def test_characterization_factors_values():
 
     with pytest.raises(AttributeError):
         assert CharacterizationFactors.Invalid
+
+
+def test_cross_sectoral_standard_values():
+    assert CrossSectoralStandard.GHG_PROTOCOL == 'GHG Protocol Product standard'
+    assert CrossSectoralStandard.ISO_14067 == 'ISO Standard 14067'
+    assert CrossSectoralStandard.ISO_14044 == 'ISO Standard 14044'

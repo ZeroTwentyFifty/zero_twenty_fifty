@@ -118,7 +118,7 @@ def valid_carbon_footprint_data():
         "biogenicCarbonWithdrawal": -1,
         "aircraftGhgEmissions": 0.5,
         "characterizationFactors": "AR6",
-        "crossSectoralStandardsUsed": ["PAS 2050"],
+        "crossSectoralStandardsUsed": ["GHG Protocol Product standard"],
         "productOrSectorSpecificRules": ["CFS Guidance for XYZ Sector"],
         "biogenicAccountingMethodology": "PEF",
         "boundaryProcessesDescription": "Description of boundary processes",
