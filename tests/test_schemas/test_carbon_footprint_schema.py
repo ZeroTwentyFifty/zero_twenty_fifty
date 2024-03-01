@@ -5,7 +5,7 @@ import pytest
 
 from schemas.carbon_footprint import (
     CarbonFootprint, RegionOrSubregion, DeclaredUnit, BiogenicAccountingMethodology,
-    CharacterizationFactors, CrossSectoralStandard
+    CharacterizationFactors, CrossSectoralStandard, ProductOrSectorSpecificRuleOperator
 )
 
 
@@ -137,3 +137,9 @@ def test_cross_sectoral_standard_values():
     assert CrossSectoralStandard.GHG_PROTOCOL == 'GHG Protocol Product standard'
     assert CrossSectoralStandard.ISO_14067 == 'ISO Standard 14067'
     assert CrossSectoralStandard.ISO_14044 == 'ISO Standard 14044'
+
+
+def test_product_or_sector_specific_rule_operator_values():
+    assert ProductOrSectorSpecificRuleOperator.PEF == 'PEF'
+    assert ProductOrSectorSpecificRuleOperator.EPD_INTERNATIONAL == 'EPD International'
+    assert ProductOrSectorSpecificRuleOperator.OTHER == 'Other'
