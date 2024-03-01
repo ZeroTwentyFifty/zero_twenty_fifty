@@ -119,7 +119,17 @@ def valid_carbon_footprint_data():
         "aircraftGhgEmissions": 0.5,
         "characterizationFactors": "AR6",
         "crossSectoralStandardsUsed": ["GHG Protocol Product standard"],
-        "productOrSectorSpecificRules": ["CFS Guidance for XYZ Sector"],
+        "productOrSectorSpecificRules": [
+            {
+                "operator": "PEF",
+                "ruleNames": ["EN15804+A2"]
+            },
+            {
+                "operator": "Other",
+                "ruleNames": ["CFS Guidance for XYZ Sector"],
+                "otherOperatorName": "CFS"
+            }
+        ],
         "biogenicAccountingMethodology": "PEF",
         "boundaryProcessesDescription": "Description of boundary processes",
         "referencePeriodStart": datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),

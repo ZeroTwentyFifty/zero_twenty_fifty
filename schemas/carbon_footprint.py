@@ -1,10 +1,10 @@
 from __future__ import annotations
 from enum import Enum
-from typing import Any, Dict, List, Optional, Annotated
+from typing import Any, Dict, List, Optional
 
 from pydantic import (
     AwareDatetime, BaseModel, ConfigDict, Field, PositiveFloat, confloat, constr,
-    field_serializer
+    field_serializer, model_validator
 )
 
 from schemas.base_types import NonEmptyString
@@ -175,6 +175,39 @@ class ProductOrSectorSpecificRuleOperator(str, Enum):
     OTHER = 'Other'
 
 
+class ProductOrSectorSpecificRule(BaseModel):
+    """A ProductOrSectorSpecificRule refers to a set of product or sector specific rules published by a specific operator and applied during product carbon footprint calculation.
+
+    Attributes:
+        operator (ProductOrSectorSpecificRuleOperator): A ProductOrSectorSpecificRule MUST include the property operator with the value conforming to data type ProductOrSectorSpecificRuleOperator.
+        ruleNames (NonEmptyStringVector): A ProductOrSectorSpecificRule MUST include the property ruleNames with value the non-empty set of rules applied from the specified operator.
+        otherOperatorName (NonEmptyString): If the value of property operator is Other, a ProductOrSectorSpecificRule MUST include the property otherOperatorName with value the name of the operator. In this case, the operator declared MUST NOT be included in the definition of ProductOrSectorSpecificRuleOperator. If the value of property operator is NOT Other, the property otherOperatorName of a ProductOrSectorSpecificRule MUST be undefined.
+
+    JSON Representation
+        Each ProductOrSectorSpecificRule MUST be encoded as a JSON object.
+
+    For more information, please refer to the official documentation:
+        https://wbcsd.github.io/tr/2023/data-exchange-protocol-20231207/#dt-productorsectorspecificrule
+    """
+    operator: ProductOrSectorSpecificRuleOperator = Field(..., description="A ProductOrSectorSpecificRule MUST include the property operator with the value conforming to data type ProductOrSectorSpecificRuleOperator.")
+    ruleNames: List[NonEmptyString] = Field(..., min_length=1, description="A ProductOrSectorSpecificRule MUST include the property ruleNames with value the non-empty set of rules applied from the specified operator.")  # Mandatory, non-empty
+
+    # Optional field with conditional dependency
+    otherOperatorName: Optional[NonEmptyString] = Field(
+        None,
+        description='If the value of property operator is Other, a ProductOrSectorSpecificRule MUST include the property otherOperatorName with value the name of the operator. In this case, the operator declared MUST NOT be included in the definition of ProductOrSectorSpecificRuleOperator. If the value of property operator is NOT Other, the property otherOperatorName of a ProductOrSectorSpecificRule MUST be undefined.',
+    )
+
+    # Using a validator for precise dependency logic
+    @model_validator(mode='after')
+    def validate_other_operator_name(self):
+        if self.operator == ProductOrSectorSpecificRuleOperator.OTHER and not self.otherOperatorName:
+            raise ValueError("'otherOperatorName' is required when 'operator' is 'Other'")
+        if self.operator != ProductOrSectorSpecificRuleOperator.OTHER and self.otherOperatorName:
+            raise ValueError("'otherOperatorName' must be absent when 'operator' is not 'Other'")
+        return self
+
+
 class EmissionFactorDS(BaseModel):
     """Represents an EmissionFactorDS, referencing emission factor databases.
 
@@ -259,7 +292,7 @@ class CarbonFootprint(BaseModel):
         ...,
         description='Cross-sectoral standards applied for calculating GHG emissions.',
     )
-    productOrSectorSpecificRules: Optional[List[str]] = Field(
+    productOrSectorSpecificRules: Optional[List[ProductOrSectorSpecificRule]] = Field(
         None,
         description='Product- or sector-specific rules for calculating GHG emissions.',
     )

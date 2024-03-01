@@ -5,7 +5,8 @@ import pytest
 
 from schemas.carbon_footprint import (
     CarbonFootprint, RegionOrSubregion, DeclaredUnit, BiogenicAccountingMethodology,
-    CharacterizationFactors, CrossSectoralStandard, ProductOrSectorSpecificRuleOperator
+    CharacterizationFactors, CrossSectoralStandard, ProductOrSectorSpecificRuleOperator,
+    ProductOrSectorSpecificRule
 )
 
 
@@ -13,7 +14,7 @@ def test_carbon_footprint_schema_validation(valid_carbon_footprint_data):
     """Test successful validation for valid carbon footprint data."""
     footprint = CarbonFootprint(**valid_carbon_footprint_data)
 
-    json_footprint_data = json.loads(footprint.model_dump_json())
+    json_footprint_data = json.loads(footprint.model_dump_json(exclude_none=True))
 
     assert json_footprint_data["declaredUnit"] == "kilogram"
     assert json_footprint_data["unitaryProductAmount"] == 100
@@ -30,7 +31,17 @@ def test_carbon_footprint_schema_validation(valid_carbon_footprint_data):
     assert json_footprint_data["aircraftGhgEmissions"] == 0.5
     assert json_footprint_data["characterizationFactors"] == "AR6"
     assert json_footprint_data["crossSectoralStandardsUsed"] == ["GHG Protocol Product standard"]
-    assert json_footprint_data["productOrSectorSpecificRules"] == ["CFS Guidance for XYZ Sector"]
+    assert json_footprint_data["productOrSectorSpecificRules"] == [
+        {
+            "operator": "PEF",
+            "ruleNames": ["EN15804+A2"]
+        },
+        {
+            "operator": "Other",
+            "ruleNames": ["CFS Guidance for XYZ Sector"],
+            "otherOperatorName": "CFS"
+        }
+    ]
     assert json_footprint_data["biogenicAccountingMethodology"] == "PEF"
     assert json_footprint_data["boundaryProcessesDescription"] == "Description of boundary processes"
     assert json_footprint_data["referencePeriodStart"] == "2023-01-01T00:00:00+00:00"
@@ -143,3 +154,47 @@ def test_product_or_sector_specific_rule_operator_values():
     assert ProductOrSectorSpecificRuleOperator.PEF == 'PEF'
     assert ProductOrSectorSpecificRuleOperator.EPD_INTERNATIONAL == 'EPD International'
     assert ProductOrSectorSpecificRuleOperator.OTHER == 'Other'
+
+# Sample Test Data
+valid_data = [
+    {
+        "operator": ProductOrSectorSpecificRuleOperator.PEF,
+        "ruleNames": ["ISO 14044", "PAS 2050"]
+    },
+    {
+        "operator": ProductOrSectorSpecificRuleOperator.EPD_INTERNATIONAL,
+        "ruleNames": ["EN 15804"]
+    },
+    {
+        "operator": ProductOrSectorSpecificRuleOperator.OTHER,
+        "ruleNames": ["XYZ Sector-Specific PCR"],
+        "otherOperatorName": "Independent Certification Body"
+    },
+]
+
+invalid_data = [
+    # Missing 'operator'
+    {"ruleNames": ["Rule 1"]},
+    # Missing 'ruleNames'
+    {"operator": ProductOrSectorSpecificRuleOperator.PEF},
+    # Empty 'ruleNames'
+    {"operator": ProductOrSectorSpecificRuleOperator.EPD_INTERNATIONAL, "ruleNames": []},
+    # 'otherOperatorName' present without 'operator' being 'Other'
+    {
+        "operator": ProductOrSectorSpecificRuleOperator.PEF,
+        "ruleNames": ["Rule 1"],
+        "otherOperatorName": "Some Operator"
+    }
+]
+
+
+@pytest.mark.parametrize("data", valid_data)
+def test_valid_product_or_sector_specific_rule(data):
+    rule = ProductOrSectorSpecificRule(**data)
+    assert rule  # Implicitly asserts that no validation errors are raised
+
+
+@pytest.mark.parametrize("data", invalid_data)
+def test_invalid_product_or_sector_specific_rule(data):
+    with pytest.raises(ValueError):
+        ProductOrSectorSpecificRule(**data)
