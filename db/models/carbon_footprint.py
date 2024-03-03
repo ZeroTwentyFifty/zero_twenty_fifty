@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, String, Float, Boolean, Enum, DateTime, 
 from sqlalchemy.orm import relationship
 from db.base_class import Base
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
-from schemas.base_types import NonEmptyString
 from schemas.carbon_footprint import (
     CharacterizationFactors, BiogenicAccountingMethodology, DeclaredUnit, RegionOrSubregion,
     ProductOrSectorSpecificRuleOperator
@@ -23,6 +22,18 @@ class ProductOrSectorSpecificRuleModel(Base):
     )
 
 
+class EmissionFactorDatasetModel(Base):
+    __tablename__ = "emissionfactordataset"
+
+    pk = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    version = Column(String, nullable=False)
+
+    carbon_footprint_pk = Column(Integer, ForeignKey('carbonfootprint.pk'))
+    carbon_footprint = relationship(
+        "CarbonFootprintModel", back_populates="secondary_emission_factor_sources", uselist=True
+    )
+
 class CarbonFootprintModel(Base):
     __tablename__ = "carbonfootprint"
 
@@ -41,8 +52,7 @@ class CarbonFootprintModel(Base):
     biogenic_carbon_withdrawal = Column(Float)
     aircraft_ghg_emissions = Column(Float)
     characterization_factors = Column(Enum(CharacterizationFactors), nullable=False)
-    cross_sectoral_standards_used = Column(String, nullable=False)  # Consider a different approach for lists
-    # product_or_sector_specific_rules = Column(JSONB, nullable=True)
+    cross_sectoral_standards_used = Column(String, nullable=False)
     biogenic_accounting_methodology = Column(Enum(BiogenicAccountingMethodology))
     boundary_processes_description = Column(String, nullable=False)
     reference_period_start = Column(DateTime, nullable=False)
@@ -50,7 +60,6 @@ class CarbonFootprintModel(Base):
     geography_country_subdivision = Column(String)
     geography_country = Column(String(2))
     geography_region_or_subregion = Column(Enum(RegionOrSubregion))
-    secondary_emission_factor_sources = Column(JSONB)  # Or a relationship to a separate table
     exempted_emissions_percent = Column(Float, CheckConstraint('exempted_emissions_percent BETWEEN 0 and 5'))
     exempted_emissions_description = Column(String, nullable=False)
     packaging_emissions_included = Column(Boolean, nullable=False)
@@ -65,4 +74,7 @@ class CarbonFootprintModel(Base):
         "ProductFootprint", back_populates="carbon_footprint")
     product_or_sector_specific_rules = relationship(
         "ProductOrSectorSpecificRuleModel", back_populates="carbon_footprint"
+    )
+    secondary_emission_factor_sources = relationship(
+        "EmissionFactorDatasetModel", back_populates="carbon_footprint"
     )
