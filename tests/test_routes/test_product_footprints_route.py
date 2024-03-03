@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.fixture()
-def valid_json_product_footprint():
+def valid_json_product_footprint(valid_carbon_footprint_data):
     return {
         "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         "specVersion": "string",
@@ -27,58 +27,7 @@ def valid_json_product_footprint():
         "productCategoryCpc": "22222",
         "productNameCompany": "string",
         "comment": "string",
-        "pcf": {
-            "declaredUnit": "liter",
-            "unitaryProductAmount": 1,
-            "pCfExcludingBiogenic": 0,
-            "pCfIncludingBiogenic": 0,
-            "fossilGhgEmissions": 0,
-            "fossilCarbonContent": 0,
-            "biogenicCarbonContent": 0,
-            "dlucGhgEmissions": 0,
-            "landManagementGhgEmissions": 0,
-            "otherBiogenicGhgEmissions": 0,
-            "ilucGhgEmissions": 0,
-            "biogenicCarbonWithdrawal": 0,
-            "aircraftGhgEmissions": 0,
-            "characterizationFactors": "AR6",
-            "crossSectoralStandardsUsed": [
-                    "GHG Protocol Product standard"
-            ],
-            "productOrSectorSpecificRules": [
-                "Other", "string", "string"
-            ],
-            "biogenicAccountingMethodology": "PEF",
-            "boundaryProcessesDescription": "string",
-            "referencePeriodStart": "2023-06-18T22:38:02.332Z",
-            "referencePeriodEnd": "2023-06-18T22:38:02.332Z",
-            "geographyCountrySubdivision": "string",
-            "geographyCountry": "AU",
-            "geographyRegionOrSubregion": "Australia and New Zealand",
-            "secondaryEmissionFactorSources": [
-                {
-                    "name": "ecoinvent",
-                    "version": "3.9.1"
-                }
-            ],
-            "exemptedEmissionsPercent": 0,
-            "exemptedEmissionsDescription": "string",
-            "packagingEmissionsIncluded": True,
-            "packagingGhgEmissions": 0,
-            "allocationRulesDescription": "string",
-            "uncertaintyAssessmentDescription": "string",
-            "primaryDataShare": 0,
-            "assurance": {
-                "assurance": True,
-                "coverage": "corporate level",
-                "level": "limited",
-                "boundary": "Gate-to-Gate",
-                "providerName": "string",
-                "completedAt": "2023-06-18T22:38",
-                "standardName": "string",
-                "comments": "string"
-            }
-        }
+        "pcf": valid_carbon_footprint_data
     }
 
 
