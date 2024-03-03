@@ -1,8 +1,11 @@
 from datetime import datetime, timezone
 
-from db.models.carbon_footprint import CarbonFootprintModel, ProductOrSectorSpecificRuleModel
+from db.models.carbon_footprint import (
+    CarbonFootprintModel, ProductOrSectorSpecificRuleModel, EmissionFactorDatasetModel
+)
 from schemas.carbon_footprint import (
-    CharacterizationFactors, BiogenicAccountingMethodology, DeclaredUnit, RegionOrSubregion, ProductOrSectorSpecificRuleOperator
+    CharacterizationFactors, BiogenicAccountingMethodology, DeclaredUnit, RegionOrSubregion,
+    ProductOrSectorSpecificRuleOperator
 )
 
 
@@ -41,7 +44,16 @@ def test_carbon_footprint_creation(db_session):
         reference_period_start=datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
         reference_period_end=datetime(2023, 12, 31, tzinfo=timezone.utc).isoformat(),
         geography_region_or_subregion=RegionOrSubregion.ASIA,
-        secondary_emission_factor_sources={},  # Sample for JSONB
+        secondary_emission_factor_sources=[
+            EmissionFactorDatasetModel(
+                name="ecoinvent",
+                version="1.2.3"
+            ),
+            EmissionFactorDatasetModel(
+                name="internal database",
+                version="3.2.1"
+            )
+        ],
         exempted_emissions_percent=2.5,
         exempted_emissions_description="Emissions from transport excluded",
         packaging_emissions_included=True,
