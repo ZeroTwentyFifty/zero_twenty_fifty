@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, JSON, Enum
+from sqlalchemy import Column, Integer, String, JSON, Enum, ForeignKey
+from sqlalchemy.orm import relationship
 
 from db.base_class import Base
 from schemas.product_footprint import ProductFootprintStatus
@@ -22,6 +23,6 @@ class ProductFootprint(Base):
     productIds = Column(JSON, comment="The set of ProductIds that uniquely identify the product.")
     productCategoryCpc = Column(String, comment="A UN Product Classification Code (CPC) that the given product belongs to.")
     productNameCompany = Column(String, comment="The trade name of the product.")
-    comment = Column(String, comment="Additional information related to the product footprint.")
-    pcf = Column(JSON, comment="The carbon footprint of the given product.")
+    comment = Column(String, comment="Additional information related to the product footprint.", nullable=False)
+    carbon_footprint = relationship("CarbonFootprintModel", back_populates="product_footprint", uselist=False)
     extensions = Column(JSON, comment="If defined, 1 or more data model extensions associated with the ProductFootprint.")
