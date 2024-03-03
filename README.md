@@ -12,6 +12,13 @@ If you need help with the software, have questions or queries, or would like to 
 
 ## Development
 
+## Warning
+
+:warning: **Caution:** Whilst every effort has been taken to ensure that the codebase is currently kept in a "green" state, 
+the nature of such an early-stage piece of software makes it extremely difficult to keep everything in line with so many
+shifting parts. So if you check out at the current head, please bear in mind that things may be broken. Tagged versions
+will be kept in working order.
+
 ### Setting up locally
 
 ### Getting setup for the first time on a new setup/host
