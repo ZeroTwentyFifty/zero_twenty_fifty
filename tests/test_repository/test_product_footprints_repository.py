@@ -79,7 +79,7 @@ def test_create_new_product_footprint(db_session, valid_product_footprint_data):
     product_footprint = create_new_product_footprint(product_footprint_schema, db_session)
     assert product_footprint.companyName == "Test Company"
     assert product_footprint.productDescription == "Test Product"
-    assert product_footprint.pcf['declaredUnit'] == "kilogram"
+    assert product_footprint.carbon_footprint.declared_unit == "kilogram"
     # TODO: Perform clean ups in a more structured way, this rollback exists in order
     #   to enable the `two_product_footprints` fixture to be used
     db_session.rollback()
