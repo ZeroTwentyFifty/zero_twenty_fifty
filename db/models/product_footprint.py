@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, JSON, Enum, ForeignKey
+from sqlalchemy import Column, Integer, String, JSON, Enum, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
 from db.base_class import Base
@@ -11,12 +11,12 @@ class ProductFootprint(Base):
     precedingPfIds = Column(JSON, comment="non-empty set of preceding product footprint identifiers without duplicates.")
     specVersion = Column(String, comment="The version of the ProductFootprint data specification.")
     version = Column(Integer, comment="The version of the ProductFootprint.")
-    created = Column(String, comment="The timestamp of the creation of the ProductFootprint.")
-    updated = Column(String, nullable=True, comment="The timestamp of the ProductFootprint update.")  # Keep as String for now
+    created = Column(DateTime(timezone=True), comment="The timestamp of the creation of the ProductFootprint.")
+    updated = Column(DateTime(timezone=True), nullable=True, comment="The timestamp of the ProductFootprint update.")
     status = Column(Enum(ProductFootprintStatus), comment="The status of the product footprint.")
     statusComment = Column(String, comment="If defined, the value should be a message explaining the reason for the current status.")
-    validityPeriodStart = Column(String, comment="If defined, the start of the validity period of the ProductFootprint.")  # Keep as String for now
-    validityPeriodEnd = Column(String, comment="The end (excluding) of the valid period of the ProductFootprint.")  # Keep as String for now
+    validityPeriodStart = Column(DateTime(timezone=True), nullable=True, comment="If defined, the start of the validity period of the ProductFootprint.")
+    validityPeriodEnd = Column(DateTime(timezone=True), nullable=True, comment="The end (excluding) of the valid period of the ProductFootprint.")
     companyName = Column(String, comment="The name of the company that is the ProductFootprint Data Owner.")
     companyIds = Column(JSON, comment="The set of Uniform Resource Names (URN) identifying the ProductFootprint Data Owner.")
     productDescription = Column(String, comment="The free-form description of the product.")
