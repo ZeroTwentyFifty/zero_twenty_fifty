@@ -14,8 +14,12 @@ def test_product_footprint_creation(db_session):
         id="test_id",
         specVersion="1.0",
         version=1,
-        created="2022-01-01",
+        created=datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
+        updated=datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
         status="ACTIVE",
+        statusComment="",
+        validityPeriodStart=datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
+        validityPeriodEnd=datetime(2026, 1, 1, tzinfo=timezone.utc).isoformat(),
         companyName="Test Company",
         companyIds=[],
         productDescription="Test Product",
@@ -80,7 +84,7 @@ def test_product_footprint_creation(db_session):
     assert item.id == "test_id"
     assert item.specVersion == "1.0"
     assert item.version == 1
-    assert item.created == "2022-01-01"
+    assert item.created.isoformat() == '2023-01-01T00:00:00+00:00'
     # assert product_footprint.status == ProductFootprintStatus.ACTIVE
     # assert product_footprint.companyName == "Test Company"
     # assert product_footprint.companyIds == []
