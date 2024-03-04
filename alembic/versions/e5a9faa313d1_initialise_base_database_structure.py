@@ -1,8 +1,8 @@
 """initialise base database structure
 
-Revision ID: 43b20f3cc4b4
+Revision ID: e5a9faa313d1
 Revises: 
-Create Date: 2024-03-03 23:15:36.316478
+Create Date: 2024-03-04 15:08:26.748592
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '43b20f3cc4b4'
+revision: str = 'e5a9faa313d1'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,12 +26,12 @@ def upgrade() -> None:
     sa.Column('precedingPfIds', sa.JSON(), nullable=True, comment='non-empty set of preceding product footprint identifiers without duplicates.'),
     sa.Column('specVersion', sa.String(), nullable=True, comment='The version of the ProductFootprint data specification.'),
     sa.Column('version', sa.Integer(), nullable=True, comment='The version of the ProductFootprint.'),
-    sa.Column('created', sa.String(), nullable=True, comment='The timestamp of the creation of the ProductFootprint.'),
-    sa.Column('updated', sa.String(), nullable=True, comment='The timestamp of the ProductFootprint update.'),
+    sa.Column('created', sa.DateTime(timezone=True), nullable=True, comment='The timestamp of the creation of the ProductFootprint.'),
+    sa.Column('updated', sa.DateTime(timezone=True), nullable=True, comment='The timestamp of the ProductFootprint update.'),
     sa.Column('status', sa.Enum('ACTIVE', 'DEPRECATED', name='productfootprintstatus'), nullable=True, comment='The status of the product footprint.'),
     sa.Column('statusComment', sa.String(), nullable=True, comment='If defined, the value should be a message explaining the reason for the current status.'),
-    sa.Column('validityPeriodStart', sa.String(), nullable=True, comment='If defined, the start of the validity period of the ProductFootprint.'),
-    sa.Column('validityPeriodEnd', sa.String(), nullable=True, comment='The end (excluding) of the valid period of the ProductFootprint.'),
+    sa.Column('validityPeriodStart', sa.DateTime(timezone=True), nullable=True, comment='If defined, the start of the validity period of the ProductFootprint.'),
+    sa.Column('validityPeriodEnd', sa.DateTime(timezone=True), nullable=True, comment='The end (excluding) of the valid period of the ProductFootprint.'),
     sa.Column('companyName', sa.String(), nullable=True, comment='The name of the company that is the ProductFootprint Data Owner.'),
     sa.Column('companyIds', sa.JSON(), nullable=True, comment='The set of Uniform Resource Names (URN) identifying the ProductFootprint Data Owner.'),
     sa.Column('productDescription', sa.String(), nullable=True, comment='The free-form description of the product.'),
@@ -71,11 +71,11 @@ def upgrade() -> None:
     sa.Column('biogenic_carbon_withdrawal', sa.Float(), nullable=True),
     sa.Column('aircraft_ghg_emissions', sa.Float(), nullable=True),
     sa.Column('characterization_factors', sa.Enum('AR5', 'AR6', name='characterizationfactors'), nullable=False),
-    sa.Column('cross_sectoral_standards_used', sa.String(), nullable=False),
+    sa.Column('cross_sectoral_standards_used', postgresql.ARRAY(sa.Enum('GHG_PROTOCOL', 'ISO_14067', 'ISO_14044', name='crosssectoralstandard')), nullable=False),
     sa.Column('biogenic_accounting_methodology', sa.Enum('PEF', 'ISO', 'GHGP', 'QUANTIS', name='biogenicaccountingmethodology'), nullable=True),
     sa.Column('boundary_processes_description', sa.String(), nullable=False),
-    sa.Column('reference_period_start', sa.DateTime(), nullable=False),
-    sa.Column('reference_period_end', sa.DateTime(), nullable=False),
+    sa.Column('reference_period_start', sa.DateTime(timezone=True), nullable=False),
+    sa.Column('reference_period_end', sa.DateTime(timezone=True), nullable=False),
     sa.Column('geography_country_subdivision', sa.String(), nullable=True),
     sa.Column('geography_country', sa.String(length=2), nullable=True),
     sa.Column('geography_region_or_subregion', sa.Enum('AFRICA', 'AMERICAS', 'ASIA', 'EUROPE', 'OCEANIA', 'AUSTRALIA_AND_NEW_ZEALAND', 'CENTRAL_ASIA', 'EASTERN_ASIA', 'EASTERN_EUROPE', 'LATIN_AMERICA_AND_THE_CARIBBEAN', 'MELANESIA', 'MICRONESIA', 'NORTHERN_AFRICA', 'NORTHERN_AMERICA', 'NORTHERN_EUROPE', 'POLYNESIA', 'SOUTH_EASTERN_ASIA', 'SOUTHERN_ASIA', 'SOUTHERN_EUROPE', 'SUB_SAHARAN_AFRICA', 'WESTERN_ASIA', 'WESTERN_EUROPE', name='regionorsubregion'), nullable=True),
