@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 import pytest
 
 
@@ -14,7 +16,7 @@ def valid_json_product_footprint(valid_carbon_footprint_data):
         "updated": "2023-06-18T22:38:02.331Z",
         "status": "Active",
         "statusComment": "string",
-        "validityPeriodStart": "2023-06-18T22:38:02.331Z",
+        "validityPeriodStart": datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
         "validityPeriodEnd": "2023-06-18T22:38:02.331Z",
         "companyName": "Clean Product Company",
         "companyIds": [
