@@ -4,7 +4,7 @@ from db.base_class import Base
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from schemas.carbon_footprint import (
     CharacterizationFactors, BiogenicAccountingMethodology, DeclaredUnit, RegionOrSubregion,
-    ProductOrSectorSpecificRuleOperator
+    ProductOrSectorSpecificRuleOperator, CrossSectoralStandard
 )
 
 
@@ -52,7 +52,7 @@ class CarbonFootprintModel(Base):
     biogenic_carbon_withdrawal = Column(Float)
     aircraft_ghg_emissions = Column(Float)
     characterization_factors = Column(Enum(CharacterizationFactors), nullable=False)
-    cross_sectoral_standards_used = Column(String, nullable=False)
+    cross_sectoral_standards_used = Column(ARRAY(Enum(CrossSectoralStandard)), nullable=False)
     biogenic_accounting_methodology = Column(Enum(BiogenicAccountingMethodology))
     boundary_processes_description = Column(String, nullable=False)
     reference_period_start = Column(DateTime, nullable=False)

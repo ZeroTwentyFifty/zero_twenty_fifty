@@ -26,7 +26,7 @@ def test_carbon_footprint_creation(db_session):
         biogenic_carbon_withdrawal=0.3,
         aircraft_ghg_emissions=0.8,
         characterization_factors=CharacterizationFactors.AR6,
-        cross_sectoral_standards_used="ISO 14040, ISO 14067",  # Example with multiple values
+        cross_sectoral_standards_used=["ISO Standard 14044", "ISO Standard 14067"],
         product_or_sector_specific_rules=[
             ProductOrSectorSpecificRuleModel(
                 operator=ProductOrSectorSpecificRuleOperator.PEF,
