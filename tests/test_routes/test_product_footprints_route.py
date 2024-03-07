@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timezone
 
 import pytest
@@ -32,6 +33,26 @@ def valid_json_product_footprint(valid_carbon_footprint_data):
         "pcf": valid_carbon_footprint_data
     }
 
+@pytest.fixture()
+def seed_database(client, auth_header, valid_json_product_footprint ,num_footprints=5):
+    """Seeds the database with a specified number of product footprints.
+
+    Args:
+        client: The test client to make requests.
+        auth_header: Authentication headers for the request.
+        num_footprints: Number of footprints to add.
+    """
+    for _ in range(num_footprints):
+        updated_uuid_pf = valid_json_product_footprint.copy()
+        updated_uuid_pf["id"] = str(uuid.uuid4())
+        response = client.post(
+            url="/footprints/create-product-footprint/",
+            json=updated_uuid_pf,
+            headers=auth_header
+        )
+        assert response.status_code == 200
+        assert response.json() == "Success"
+
 
 def test_create_product_footprint(client, auth_header, valid_json_product_footprint):
     response = client.post(
@@ -59,16 +80,12 @@ This tests is currently succeeding but only because the create-product-footprint
 calls are failing and so there's nothing in there, the API does actually work, but
 this test does not, come back to this once the data model is in better shape.
 """
-# def test_read_product_footprints(client, access_token, valid_json_product_footprint):
-#     headers = {"Authorization": f"Bearer {access_token}"}
-#
-#     valid_json_product_footprint["id"] = str(uuid.uuid4())
-#
-#     post_response = client.post(url="/footprints/create-product-footprint/", json=json.dumps(valid_json_product_footprint), headers=headers)
-#     client.post(url="/footprints/create-product-footprint/", json=json.dumps(valid_json_product_footprint))
-#     assert post_response.json() == "Success"
-#     response = client.get("/footprints/?offset=1&limit=10", headers=headers)
-#     assert response.status_code == 200
-#     print(response.json()["data"])
-#     assert response.json()["data"]
-#     # assert response.json()[1]
+def test_read_product_footprints(client, auth_header, seed_database):
+
+    response = client.get("/footprints/?offset=1&limit=10", headers=auth_header)
+    assert response.status_code == 200
+    print(f"data = {response.json()['data']}")
+    assert len(response.json()["data"]) == 5
+    assert response.json()
+    assert response.json()["data"][1]
+    assert response.json()["data"][4]
