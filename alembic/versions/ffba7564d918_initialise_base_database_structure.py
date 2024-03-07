@@ -1,8 +1,8 @@
 """initialise base database structure
 
-Revision ID: e5a9faa313d1
+Revision ID: ffba7564d918
 Revises: 
-Create Date: 2024-03-04 15:08:26.748592
+Create Date: 2024-03-07 23:24:44.015377
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = 'e5a9faa313d1'
+revision: str = 'ffba7564d918'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -23,7 +23,7 @@ def upgrade() -> None:
     op.create_table('productfootprint',
     sa.Column('pk', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('id', sa.String(), nullable=True, comment='The product footprint identifier.'),
-    sa.Column('precedingPfIds', sa.JSON(), nullable=True, comment='non-empty set of preceding product footprint identifiers without duplicates.'),
+    sa.Column('precedingPfIds', postgresql.ARRAY(sa.String()), nullable=True, comment='non-empty set of preceding product footprint identifiers without duplicates.'),
     sa.Column('specVersion', sa.String(), nullable=True, comment='The version of the ProductFootprint data specification.'),
     sa.Column('version', sa.Integer(), nullable=True, comment='The version of the ProductFootprint.'),
     sa.Column('created', sa.DateTime(timezone=True), nullable=True, comment='The timestamp of the creation of the ProductFootprint.'),
@@ -33,13 +33,13 @@ def upgrade() -> None:
     sa.Column('validityPeriodStart', sa.DateTime(timezone=True), nullable=True, comment='If defined, the start of the validity period of the ProductFootprint.'),
     sa.Column('validityPeriodEnd', sa.DateTime(timezone=True), nullable=True, comment='The end (excluding) of the valid period of the ProductFootprint.'),
     sa.Column('companyName', sa.String(), nullable=True, comment='The name of the company that is the ProductFootprint Data Owner.'),
-    sa.Column('companyIds', sa.JSON(), nullable=True, comment='The set of Uniform Resource Names (URN) identifying the ProductFootprint Data Owner.'),
+    sa.Column('companyIds', postgresql.ARRAY(sa.String()), nullable=True, comment='The set of Uniform Resource Names (URN) identifying the ProductFootprint Data Owner.'),
     sa.Column('productDescription', sa.String(), nullable=True, comment='The free-form description of the product.'),
-    sa.Column('productIds', sa.JSON(), nullable=True, comment='The set of ProductIds that uniquely identify the product.'),
+    sa.Column('productIds', postgresql.ARRAY(sa.String()), nullable=True, comment='The set of ProductIds that uniquely identify the product.'),
     sa.Column('productCategoryCpc', sa.String(), nullable=True, comment='A UN Product Classification Code (CPC) that the given product belongs to.'),
     sa.Column('productNameCompany', sa.String(), nullable=True, comment='The trade name of the product.'),
     sa.Column('comment', sa.String(), nullable=False, comment='Additional information related to the product footprint.'),
-    sa.Column('extensions', sa.JSON(), nullable=True, comment='If defined, 1 or more data model extensions associated with the ProductFootprint.'),
+    sa.Column('extensions', postgresql.JSONB(astext_type=sa.Text()), nullable=True, comment='If defined, 1 or more data model extensions associated with the ProductFootprint.'),
     sa.PrimaryKeyConstraint('pk')
     )
     op.create_index(op.f('ix_productfootprint_id'), 'productfootprint', ['id'], unique=False)
