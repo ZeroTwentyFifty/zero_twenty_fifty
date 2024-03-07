@@ -33,38 +33,11 @@ def valid_json_product_footprint(valid_carbon_footprint_data):
     }
 
 
-@pytest.fixture
-def test_credentials():
-    return ("testuser@example.com", "testuser")
-
-
-@pytest.fixture
-def access_token(client, test_user):
-    """
-    TODO: Clean this up and instead of returning an access_token, just return the
-        auth header so it can be inserted directly into the client requests, do
-        this from the conftest file
-    """
-    response = client.post(
-        "/auth/token",
-        data={
-            "grant_type": "",
-            "scope": "",
-            "client_id": "testuser@example.com",
-            "client_secret": "testuser"
-        },
-    )
-
-    return response.json()["access_token"]
-
-
-def test_create_product_footprint(client, access_token, valid_json_product_footprint):
-    headers = {"Authorization": f"Bearer {access_token}"}
-
+def test_create_product_footprint(client, auth_header, valid_json_product_footprint):
     response = client.post(
         url="/footprints/create-product-footprint/",
         json=valid_json_product_footprint,
-        headers=headers
+        headers=auth_header
     )
 
     print(response.json())
@@ -72,10 +45,10 @@ def test_create_product_footprint(client, access_token, valid_json_product_footp
     assert response.json() == "Success"
 
 
-def test_read_product_footprint(client, access_token):
-    headers = {"Authorization": f"Bearer {access_token}"}
-
-    response = client.get("/footprints/3fa85f64-5717-4562-b3fc-2c963f66afa6/", headers=headers)
+def test_read_product_footprint(client, auth_header):
+    response = client.get(
+        url="/footprints/3fa85f64-5717-4562-b3fc-2c963f66afa6/",
+        headers=auth_header)
 
     assert response.status_code == 200
     assert response.json()["data"]["companyName"] == "Clean Product Company"
