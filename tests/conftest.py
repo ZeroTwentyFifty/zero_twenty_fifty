@@ -93,6 +93,21 @@ def test_user(db_session: SessionTesting):
     return user
 
 
+@pytest.fixture
+def auth_header(client, test_user):
+    response = client.post(
+        "/auth/token",
+        data={
+            "grant_type": "",
+            "scope": "",
+            "client_id": "testuser@example.com",
+            "client_secret": "testuser"
+        },
+    )
+    token =  response.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
+
+
 """
 TODO: Consolidate and clean up the fixtures across the tests, if there are fixtures that
 are duplicates across files, look into putting them in one place and having the system
