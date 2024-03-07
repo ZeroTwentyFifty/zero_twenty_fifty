@@ -12,7 +12,7 @@ def test_product_footprint_creation(db_session):
 
     product_footprint = ProductFootprint(
         id="test_id",
-        precedingPfIds="",
+        precedingPfIds=["prior-id"],
         specVersion="1.0",
         version=1,
         created=datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
