@@ -123,6 +123,13 @@ def list_footprints(db: Session = Depends(get_db), current_user: User = Depends(
         release needs to happen sooner rather than later.
     """
     product_footprints = list_product_footprints(db=db)
+    if not product_footprints or len(product_footprints) == 0:
+        raise NoSuchFootprintException
+
+    return paginate(product_footprints, transformer=transformer)
+
+
+def transformer(product_footprints):
     product_footprint_schemas: list[ProductFootprintSchema] = []
     for product_footprint in product_footprints:
         secondary_emission_factor_sources: list[EmissionFactorDS] = []
@@ -197,6 +204,5 @@ def list_footprints(db: Session = Depends(get_db), current_user: User = Depends(
             extensions=product_footprint.extensions
         )
         product_footprint_schemas.append(product_footprint_schema)
-    if not product_footprints:
-        raise NoSuchFootprintException
-    return paginate(product_footprint_schemas)
+
+    return product_footprint_schemas

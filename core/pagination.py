@@ -2,9 +2,8 @@ from contextlib import contextmanager
 from typing import Any, Generic, Optional, Sequence, TypeVar
 from typing_extensions import Self
 
-from fastapi import Query
-from fastapi_pagination.bases import AbstractPage, AbstractParams, RawParams
-from pydantic import BaseModel
+from fastapi_pagination.bases import AbstractPage
+from fastapi_pagination.limit_offset import OptionalLimitOffsetParams
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 
@@ -22,30 +21,6 @@ The main issue is that testing programmatically leads to RuntimeErrors, and it
 is (to me), currently incomprehensible without spending a significant amount of 
 time to understand some of the more arcane parts of it.
 """
-
-
-class JSONAPIParams(BaseModel, AbstractParams):
-    """
-    Defines pagination parameters compliant with the JSON:API specification.
-    Inherits from AbstractParams (provided by the 'fastapi-pagination' library).
-
-    Attributes:
-        offset (int): Starting index for data retrieval (defaults to 1, minimum 1).
-        limit (int): Maximum number of items to fetch per page (defaults to 10, between 1 and 100).
-
-    Testing Notes:
-        * Test this model directly with unit tests. Verify that different
-          combinations of 'offset' and 'limit' are constructed and validated correctly.
-    """
-    offset: int = Query(1, ge=1)
-    limit: int = Query(10, ge=1, le=100)
-
-    def to_raw_params(self) -> RawParams:
-        """
-        Converts JSONAPIParams into a simpler 'RawParams' format used internally
-        by the pagination library.
-        """
-        return RawParams(limit=self.limit, offset=self.offset)
 
 
 T = TypeVar("T")
@@ -69,33 +44,27 @@ class JSONAPIPage(AbstractPage[T], Generic[T]):
             * If/when 'meta' attributes are implemented, ensure they are serialized as expected.
     """
     data: Sequence[T]
+    meta: dict[str, int] = {}
 
-    __params_type__ = JSONAPIParams
+    __params_type__ = OptionalLimitOffsetParams
 
     @classmethod
     def create(
         cls,
         items: Sequence[T],
-        params: AbstractParams,
+        params: OptionalLimitOffsetParams = None,
         *,
         total: Optional[int] = None,
         **kwargs: Any,
     ) -> Self:
-        assert isinstance(params, JSONAPIParams)
+        assert isinstance(params, OptionalLimitOffsetParams)
         assert total is not None
 
-        page_data = cls._get_page_data(items=items, params=params)
-
         return cls(
-            data=page_data,
+            data=items,
+            meta={"total": total},
             **kwargs,
         )
-
-    @staticmethod
-    def _get_page_data(*, items: Sequence[T], params: JSONAPIParams) -> Sequence[T]:
-        start_index: int = params.offset - 1
-        finish_index: int = start_index + params.limit
-        return items[start_index: finish_index]
 
 
 class PaginationMiddleware(BaseHTTPMiddleware):
@@ -121,7 +90,8 @@ class PaginationMiddleware(BaseHTTPMiddleware):
             product_footprint_count = count_product_footprints(db=db)
 
         limit = request.query_params.get('limit')
-        offset = request.query_params.get('offset', 1)
+        print(f"we have a limit here: {limit}")
+        offset = request.query_params.get('offset')
         if limit:
             # Get current URL, adjust for next page
             http_url = request.url
