@@ -117,6 +117,16 @@ def test_retrieve_product_footprint_not_found(db_session):
     assert item is None
 
 
+def test_list_product_footprints_empty_returns_none(db_session):
+    """
+    Tests that `list_product_footprints` returns the correct number of results
+    and that the data is as expected.
+    """
+    product_footprints = list_product_footprints(db_session)
+
+    assert product_footprints is None
+
+
 @pytest.mark.parametrize(
     "product_footprint_id",
     ["90163d8f-8465-4a6f-9e43-a58d68bef72f", "80b79a90-0dbc-48d0-b910-551c09037d61"])  # Extract IDs from fixture
