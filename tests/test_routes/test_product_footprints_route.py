@@ -33,8 +33,8 @@ def valid_json_product_footprint(valid_carbon_footprint_data):
         "pcf": valid_carbon_footprint_data
     }
 
-@pytest.fixture()
-def seed_database(client, auth_header, valid_json_product_footprint ,num_footprints=5):
+@pytest.fixture(scope="function")
+def seed_database(client, auth_header, valid_json_product_footprint, num_footprints=5):
     """Seeds the database with a specified number of product footprints.
 
     Args:
@@ -75,17 +75,40 @@ def test_read_product_footprint(client, auth_header):
     assert response.json()["data"]["companyName"] == "Clean Product Company"
 
 
-"""
-This tests is currently succeeding but only because the create-product-footprint
-calls are failing and so there's nothing in there, the API does actually work, but
-this test does not, come back to this once the data model is in better shape.
-"""
-def test_read_product_footprints(client, auth_header, seed_database):
+def test_read_product_footprints_no_seeding(client, auth_header):
+    response = client.get("/footprints/?limit=1", headers=auth_header)
+    assert response.status_code == 200
+    print(f"data = {response.json()['data']}")
+    assert len(response.json()["data"]) == 1
 
-    response = client.get("/footprints/?offset=1&limit=10", headers=auth_header)
+def test_read_product_footprints(client, auth_header, seed_database):
+    response = client.get("/footprints/?offset=1", headers=auth_header)
     assert response.status_code == 200
     print(f"data = {response.json()['data']}")
     assert len(response.json()["data"]) == 5
     assert response.json()
     assert response.json()["data"][1]
     assert response.json()["data"][4]
+
+def test_read_product_footprints_with_offset(client, auth_header, seed_database):
+    response = client.get("/footprints/", headers=auth_header)
+    assert response.status_code == 200
+    print(f"data = {response.json()['data']}")
+    assert len(response.json()["data"]) == 11
+    assert response.json()
+    assert response.json()["data"][1]
+    assert response.json()["data"][2]
+
+
+def test_read_product_footprints_with_limit(client, auth_header, seed_database):
+    response = client.get("/footprints/?limit=3", headers=auth_header)
+    assert response.status_code == 200
+    print(f"data = {response.json()['data']}")
+    assert len(response.json()["data"]) == 3
+    assert response.json()
+    assert response.json()["data"][1]
+    assert response.json()["data"][2]
+
+
+# add a test for bad requests, when i hit "/footprints/?limit=50, it returned a NoneType
+# error for the product_footprint call with has no attribute, need to catch that better
