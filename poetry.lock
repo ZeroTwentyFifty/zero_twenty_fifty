@@ -522,13 +522,13 @@ all = ["email-validator (>=2.0.0)", "httpx (>=0.23.0)", "itsdangerous (>=1.1.0)"
 
 [[package]]
 name = "fastapi-pagination"
-version = "0.12.18"
+version = "0.12.19"
 description = "FastAPI pagination"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "fastapi_pagination-0.12.18-py3-none-any.whl", hash = "sha256:96d66f2e9babb9341977ffdad46b11a5ae36c3669e3d409a1ffca2d2b18be405"},
-    {file = "fastapi_pagination-0.12.18.tar.gz", hash = "sha256:aa0997bc0a1863799a23834ff17c9e182638e761cd3ba1fe7d06c0402ab838f6"},
+    {file = "fastapi_pagination-0.12.19-py3-none-any.whl", hash = "sha256:67838b21e2f62fae739117d130f8153a362d1fc266c2d738543e71d446618635"},
+    {file = "fastapi_pagination-0.12.19.tar.gz", hash = "sha256:d947d0c91589dc2fc99a15409707eb24272970a044489d21363641af03516fd7"},
 ]
 
 [package.dependencies]
@@ -537,13 +537,13 @@ pydantic = ">=1.9.1"
 typing-extensions = ">=4.8.0,<5.0.0"
 
 [package.extras]
-all = ["SQLAlchemy (>=1.3.20)", "asyncpg (>=0.24.0)", "beanie (>=1.25.0)", "bunnet (>=1.1.0,<2.0.0)", "databases (>=0.6.0)", "django (<5.0.0)", "mongoengine (>=0.23.1,<0.28.0)", "motor (>=2.5.1,<4.0.0)", "orm (>=0.3.1)", "ormar (>=0.11.2)", "piccolo (>=0.89,<0.122)", "pony (>=0.7.16,<0.8.0)", "scylla-driver (>=3.25.6,<4.0.0)", "sqlakeyset (>=2.0.1680321678,<3.0.0)", "sqlmodel (>=0.0.8,<0.0.15)", "tortoise-orm (>=0.16.18,<0.21.0)"]
+all = ["SQLAlchemy (>=1.3.20)", "asyncpg (>=0.24.0)", "beanie (>=1.25.0)", "bunnet (>=1.1.0,<2.0.0)", "databases (>=0.6.0)", "django (<5.0.0)", "mongoengine (>=0.23.1,<0.29.0)", "motor (>=2.5.1,<4.0.0)", "orm (>=0.3.1)", "ormar (>=0.11.2)", "piccolo (>=0.89,<0.122)", "pony (>=0.7.16,<0.8.0)", "scylla-driver (>=3.25.6,<4.0.0)", "sqlakeyset (>=2.0.1680321678,<3.0.0)", "sqlmodel (>=0.0.8,<0.0.15)", "tortoise-orm (>=0.16.18,<0.21.0)"]
 asyncpg = ["SQLAlchemy (>=1.3.20)", "asyncpg (>=0.24.0)"]
 beanie = ["beanie (>=1.25.0)"]
 bunnet = ["bunnet (>=1.1.0,<2.0.0)"]
 databases = ["databases (>=0.6.0)"]
 django = ["databases (>=0.6.0)", "django (<5.0.0)"]
-mongoengine = ["mongoengine (>=0.23.1,<0.28.0)"]
+mongoengine = ["mongoengine (>=0.23.1,<0.29.0)"]
 motor = ["motor (>=2.5.1,<4.0.0)"]
 orm = ["databases (>=0.6.0)", "orm (>=0.3.1)"]
 ormar = ["ormar (>=0.11.2)"]
@@ -2211,4 +2211,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "b7dff6166f700c00b8d832415086afa3f5e8f9f8ee62d3c291e3474cf492a0bc"
+content-hash = "84baf41549a56323bb590d934410e8e7dfd67fa5ab1f2238e089636f55da5cce"
