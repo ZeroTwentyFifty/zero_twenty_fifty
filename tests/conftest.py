@@ -31,7 +31,7 @@ def start_application():
 
 SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/postgres"
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, echo=True, future=True
+    SQLALCHEMY_DATABASE_URL, future=True
 )
 # Use connect_args parameter only with sqlite
 SessionTesting = sessionmaker(autocommit=False, autoflush=False, bind=engine)
