@@ -105,8 +105,10 @@ def retrieve_product_footprint(id: str, db: Session):
     return item
 
 
-def list_product_footprints(db: Session):
+def list_product_footprints(db: Session) -> list[ProductFootprintModel] | None:
     product_footprints = db.query(ProductFootprintModel).all()
+    if len(product_footprints) == 0:
+        return None
     return product_footprints
 
 
