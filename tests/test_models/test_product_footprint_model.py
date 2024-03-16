@@ -1,5 +1,8 @@
 from datetime import datetime, timezone
 
+import pytest
+from sqlalchemy.exc import IntegrityError
+
 from db.models.product_footprint import ProductFootprint, ProductFootprintStatus
 from db.models.carbon_footprint import CarbonFootprintModel, ProductOrSectorSpecificRuleModel, EmissionFactorDatasetModel
 from schemas.carbon_footprint import (
@@ -101,3 +104,22 @@ def test_product_footprint_creation(db_session):
 def test_product_footprint_status_values():
     assert ProductFootprintStatus.ACTIVE.value == "Active"
     assert ProductFootprintStatus.DEPRECATED.value == "Deprecated"
+
+
+def test_product_footprint_id_field_is_unique(db_session):
+    # Create a record
+    record1 = ProductFootprint(
+        id="test_for_uniqueness",
+        comment="test"
+    )
+    db_session.add(record1)
+    db_session.commit()
+
+    # Attempt to create another record with the same id
+    record2 = ProductFootprint(
+        id="test_for_uniqueness",
+        comment = "test"
+    )
+    db_session.add(record2)
+    with pytest.raises(IntegrityError, match="duplicate key value violates unique constraint"):
+        db_session.commit()

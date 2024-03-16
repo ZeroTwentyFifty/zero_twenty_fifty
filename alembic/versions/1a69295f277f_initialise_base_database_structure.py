@@ -1,8 +1,8 @@
 """initialise base database structure
 
-Revision ID: ffba7564d918
+Revision ID: 1a69295f277f
 Revises: 
-Create Date: 2024-03-07 23:24:44.015377
+Create Date: 2024-03-16 12:46:26.532739
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = 'ffba7564d918'
+revision: str = '1a69295f277f'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -42,7 +42,7 @@ def upgrade() -> None:
     sa.Column('extensions', postgresql.JSONB(astext_type=sa.Text()), nullable=True, comment='If defined, 1 or more data model extensions associated with the ProductFootprint.'),
     sa.PrimaryKeyConstraint('pk')
     )
-    op.create_index(op.f('ix_productfootprint_id'), 'productfootprint', ['id'], unique=False)
+    op.create_index(op.f('ix_productfootprint_id'), 'productfootprint', ['id'], unique=True)
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(), nullable=False),
