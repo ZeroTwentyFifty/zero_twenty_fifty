@@ -9,7 +9,8 @@ from schemas.product_footprint import ProductFootprintStatus
 class ProductFootprint(Base):
     pk = Column(Integer, primary_key=True, autoincrement=True)
     id = Column(String, index=True, unique=True, comment="The product footprint identifier.")
-    # need some smarts around this
+    # TODO: precedingPfIds needs to be improved in order to link to prior
+    #   pfs, this needs to be sorted ASAP.
     precedingPfIds = Column(ARRAY(String), comment="non-empty set of preceding product footprint identifiers without duplicates.")
     specVersion = Column(String, comment="The version of the ProductFootprint data specification.")
     version = Column(Integer, comment="The version of the ProductFootprint.")
@@ -26,5 +27,5 @@ class ProductFootprint(Base):
     productCategoryCpc = Column(String, comment="A UN Product Classification Code (CPC) that the given product belongs to.")
     productNameCompany = Column(String, comment="The trade name of the product.")
     comment = Column(String, comment="Additional information related to the product footprint.", nullable=False)
-    carbon_footprint = relationship("CarbonFootprintModel", back_populates="product_footprint", uselist=False)
+    carbon_footprint = relationship("CarbonFootprintModel", back_populates="product_footprint", uselist=False, cascade="all, delete-orphan")
     extensions = Column(JSONB, comment="If defined, 1 or more data model extensions associated with the ProductFootprint.")
