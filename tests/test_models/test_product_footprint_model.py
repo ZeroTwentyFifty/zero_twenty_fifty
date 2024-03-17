@@ -1,86 +1,16 @@
-from datetime import datetime, timezone
-
 import pytest
 from sqlalchemy.exc import IntegrityError
 
 from db.models.product_footprint import ProductFootprint, ProductFootprintStatus
-from db.models.carbon_footprint import CarbonFootprintModel, ProductOrSectorSpecificRuleModel, EmissionFactorDatasetModel
-from schemas.carbon_footprint import (
-    CharacterizationFactors, BiogenicAccountingMethodology, DeclaredUnit, RegionOrSubregion,
-    ProductOrSectorSpecificRuleOperator
-)
+from db.models.carbon_footprint import CarbonFootprintModel
 
 
-def test_product_footprint_creation(db_session):
+def test_product_footprint_creation(db_session, valid_product_footprint_model, valid_carbon_footprint_model):
 
-    product_footprint = ProductFootprint(
-        id="test_id",
-        precedingPfIds=["prior-id"],
-        specVersion="1.0",
-        version=1,
-        created=datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
-        updated=datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
-        status="ACTIVE",
-        statusComment="",
-        validityPeriodStart=datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
-        validityPeriodEnd=datetime(2026, 1, 1, tzinfo=timezone.utc).isoformat(),
-        companyName="Test Company",
-        companyIds=[],
-        productDescription="Test Product",
-        productIds=[],
-        productCategoryCpc="Test Category",
-        productNameCompany="Test Product Name",
-        comment="Test Comment",
-        carbon_footprint=CarbonFootprintModel(
-            declared_unit=DeclaredUnit.KILOGRAM,
-            unitary_product_amount=1.5,
-            pcf_excluding_biogenic=2.3,
-            pcf_including_biogenic=3.0,
-            fossil_ghg_emissions=1.8,
-            fossil_carbon_content=1.2,
-            biogenic_carbon_content=0.5,
-            dluc_ghg_emissions=0.2,
-            land_management_ghg_emissions=0.1,
-            other_biogenic_ghg_emissions=0.4,
-            iluc_ghg_emissions=0.6,
-            biogenic_carbon_withdrawal=0.3,
-            aircraft_ghg_emissions=0.8,
-            characterization_factors=CharacterizationFactors.AR6,
-            cross_sectoral_standards_used=["ISO Standard 14044", "ISO Standard 14067"],
-            product_or_sector_specific_rules=[
-                ProductOrSectorSpecificRuleModel(
-                    operator=ProductOrSectorSpecificRuleOperator.OTHER,
-                    rule_names=["Rule1", "Rule2"],
-                    other_operator_name="Custom Operator"
-                )
-            ],
-            biogenic_accounting_methodology=BiogenicAccountingMethodology.PEF,
-            boundary_processes_description="Cradle-to-gate",
-            reference_period_start=datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
-            reference_period_end=datetime(2023, 12, 31, tzinfo=timezone.utc).isoformat(),
-            geography_region_or_subregion=RegionOrSubregion.ASIA,
-            secondary_emission_factor_sources=[
-                EmissionFactorDatasetModel(
-                    name="ecoinvent",
-                    version="1.2.3"
-                ),
-                EmissionFactorDatasetModel(
-                    name="internal database",
-                    version="3.2.1"
-                )
-            ],
-            exempted_emissions_percent=2.5,
-            exempted_emissions_description="Emissions from transport excluded",
-            packaging_emissions_included=True,
-            packaging_ghg_emissions=0.15,
-            allocation_rules_description="Allocation based on mass",
-            uncertainty_assessment_description="Monte Carlo simulation",
-            primary_data_share=0.6,
-            dqi={},
-            assurance={}
-        ),
-        extensions={}
-    )
+    product_footprint = valid_product_footprint_model
+    carbon_footprint = valid_carbon_footprint_model
+
+    product_footprint.carbon_footprint = carbon_footprint
 
     db_session.add(product_footprint)
     db_session.commit()
@@ -127,77 +57,10 @@ def test_product_footprint_id_field_is_unique(db_session):
     db_session.close()
 
 
-def test_product_footprint_deletion_results_in_carbon_footprint_deletion(db_session):
+def test_product_footprint_deletion_results_in_carbon_footprint_deletion(db_session, valid_product_footprint_model, valid_carbon_footprint_model):
     """Tests if deleting a ProductFootprint cascades to CarbonFootprint"""
-    product_footprint = ProductFootprint(
-        id="test_id",
-        precedingPfIds=["prior-id"],
-        specVersion="1.0",
-        version=1,
-        created=datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
-        updated=datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
-        status="ACTIVE",
-        statusComment="",
-        validityPeriodStart=datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
-        validityPeriodEnd=datetime(2026, 1, 1, tzinfo=timezone.utc).isoformat(),
-        companyName="Test Company",
-        companyIds=[],
-        productDescription="Test Product",
-        productIds=[],
-        productCategoryCpc="Test Category",
-        productNameCompany="Test Product Name",
-        comment="Test Comment",
-        extensions={}
-    )
-
-    carbon_footprint = CarbonFootprintModel(
-        declared_unit=DeclaredUnit.KILOGRAM,
-        unitary_product_amount=1.5,
-        pcf_excluding_biogenic=2.3,
-        pcf_including_biogenic=3.0,
-        fossil_ghg_emissions=1.8,
-        fossil_carbon_content=1.2,
-        biogenic_carbon_content=0.5,
-        dluc_ghg_emissions=0.2,
-        land_management_ghg_emissions=0.1,
-        other_biogenic_ghg_emissions=0.4,
-        iluc_ghg_emissions=0.6,
-        biogenic_carbon_withdrawal=0.3,
-        aircraft_ghg_emissions=0.8,
-        characterization_factors=CharacterizationFactors.AR6,
-        cross_sectoral_standards_used=["ISO Standard 14044", "ISO Standard 14067"],
-        product_or_sector_specific_rules=[
-            ProductOrSectorSpecificRuleModel(
-                operator=ProductOrSectorSpecificRuleOperator.OTHER,
-                rule_names=["Rule1", "Rule2"],
-                other_operator_name="Custom Operator"
-            )
-        ],
-        biogenic_accounting_methodology=BiogenicAccountingMethodology.PEF,
-        boundary_processes_description="Cradle-to-gate",
-        reference_period_start=datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
-        reference_period_end=datetime(2023, 12, 31, tzinfo=timezone.utc).isoformat(),
-        geography_region_or_subregion=RegionOrSubregion.ASIA,
-        secondary_emission_factor_sources=[
-            EmissionFactorDatasetModel(
-                name="ecoinvent",
-                version="1.2.3"
-            ),
-            EmissionFactorDatasetModel(
-                name="internal database",
-                version="3.2.1"
-            )
-        ],
-        exempted_emissions_percent=2.5,
-        exempted_emissions_description="Emissions from transport excluded",
-        packaging_emissions_included=True,
-        packaging_ghg_emissions=0.15,
-        allocation_rules_description="Allocation based on mass",
-        uncertainty_assessment_description="Monte Carlo simulation",
-        primary_data_share=0.6,
-        dqi={},
-        assurance={}
-    )
+    product_footprint = valid_product_footprint_model
+    carbon_footprint = valid_carbon_footprint_model
 
     product_footprint.carbon_footprint = carbon_footprint
     db_session.add(product_footprint)
