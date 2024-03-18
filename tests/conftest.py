@@ -43,7 +43,7 @@ engine = create_engine(
 SessionTesting = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def app() -> Generator[FastAPI, Any, None]:
     """
     Create a fresh database on each test case.
@@ -56,19 +56,18 @@ def app() -> Generator[FastAPI, Any, None]:
     Base.metadata.drop_all(engine)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def db_session(app: FastAPI) -> Generator[SessionTesting, Any, None]:
     connection = engine.connect()
     transaction = connection.begin()
     session = SessionTesting(bind=connection)
     yield session  # use the session in tests.
     session.close()
-    if transaction.is_active:
-        transaction.rollback()
+    transaction.rollback()
     connection.close()
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def client(
     app: FastAPI, db_session: SessionTesting
 ) -> Generator[TestClient, Any, None]:
@@ -88,7 +87,7 @@ def client(
         yield client
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def test_user(db_session: SessionTesting):
     user_data = {
         "username": "testuser",
@@ -110,7 +109,7 @@ def auth_header(client, test_user):
             "client_secret": "testuser"
         },
     )
-    token =  response.json()["access_token"]
+    token = response.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
 
 
@@ -122,7 +121,7 @@ about good quality fixture organisation in Pytest.
 """
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def valid_carbon_footprint_data():
     data = {
         "declaredUnit": "kilogram",
