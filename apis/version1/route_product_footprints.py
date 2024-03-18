@@ -130,7 +130,7 @@ def list_footprints(db: Session = Depends(get_db), current_user: User = Depends(
     """
     product_footprints = list_product_footprints(db=db)
     if not product_footprints or len(product_footprints) == 0:
-        raise NoSuchFootprintException
+        return {'data': []}
 
     return paginate(product_footprints, transformer=transformer)
 

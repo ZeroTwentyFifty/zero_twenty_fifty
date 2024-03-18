@@ -92,30 +92,29 @@ def test_read_product_footprint_not_found(client, auth_header):
     assert response.json()["detail"] == "The specified footprint does not exist"  # Match your exception message
 
 
-def test_read_product_footprints_no_seeding(client, auth_header):
-    response = client.get("/footprints/?limit=1", headers=auth_header)
+def test_list_product_footprints_not_found(client, auth_header):
+    response = client.get("/footprints/", headers=auth_header)
     assert response.status_code == 200
-    print(f"data = {response.json()['data']}")
-    assert len(response.json()["data"]) == 1
+    assert len(response.json()["data"]) == 0
 
 
 def test_read_product_footprints(client, auth_header, seed_database):
-    response = client.get("/footprints/?offset=1", headers=auth_header)
+    response = client.get("/footprints/", headers=auth_header)
     assert response.status_code == 200
-    print(f"data = {response.json()['data']}")
     assert len(response.json()["data"]) == 5
     assert response.json()
     assert response.json()["data"][1]
     assert response.json()["data"][4]
 
+
 def test_read_product_footprints_with_offset(client, auth_header, seed_database):
-    response = client.get("/footprints/", headers=auth_header)
+    response = client.get("/footprints/?offset=3", headers=auth_header)
     assert response.status_code == 200
     print(f"data = {response.json()['data']}")
-    assert len(response.json()["data"]) == 11
+    assert len(response.json()["data"]) == 2
     assert response.json()
+    assert response.json()["data"][0]
     assert response.json()["data"][1]
-    assert response.json()["data"][2]
 
 
 def test_read_product_footprints_with_limit(client, auth_header, seed_database):
