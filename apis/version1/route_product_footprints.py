@@ -22,6 +22,7 @@ router = APIRouter()
 TODO: Implement full CRUD functionality for this module.
 """
 
+
 @router.post("/create-product-footprint/", status_code=200)
 def create_product_footprint(
     product_footprint: ProductFootprintSchema,
@@ -35,7 +36,13 @@ def create_product_footprint(
 
 @router.get("/{id}", response_model=dict[str, ProductFootprintSchema], status_code=200)
 def read_product_footprint(id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user_from_token)):
+    """
+    TODO: Replace the {id} with a Pydantic inout validation schema for UUIDv4 values
+    """
     product_footprint = retrieve_product_footprint(id=id, db=db)
+
+    if not product_footprint:
+        raise NoSuchFootprintException
 
     secondary_emission_factor_sources: list[EmissionFactorDS] = []
     for dataset in product_footprint.carbon_footprint.secondary_emission_factor_sources:
@@ -108,8 +115,7 @@ def read_product_footprint(id: str, db: Session = Depends(get_db), current_user:
         ),
         extensions=product_footprint.extensions
     )
-    if not product_footprint:
-        raise NoSuchFootprintException
+
     return {'data': product_footprint_schema}
 
 

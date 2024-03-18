@@ -66,7 +66,13 @@ def test_create_product_footprint(client, auth_header, valid_json_product_footpr
     assert response.json() == "Success"
 
 
-def test_read_product_footprint(client, auth_header):
+def test_read_product_footprint(client, auth_header, valid_json_product_footprint):
+    _ = client.post(
+        url="/footprints/create-product-footprint/",
+        json=valid_json_product_footprint,
+        headers=auth_header
+    )
+
     response = client.get(
         url="/footprints/3fa85f64-5717-4562-b3fc-2c963f66afa6/",
         headers=auth_header)
@@ -75,11 +81,23 @@ def test_read_product_footprint(client, auth_header):
     assert response.json()["data"]["companyName"] == "Clean Product Company"
 
 
+def test_read_product_footprint_not_found(client, auth_header):
+    non_existent_id = "00000000-0000-0000-0000-000000000000"  # Use a clearly invalid ID
+    response = client.get(
+        url=f"/footprints/{non_existent_id}/",  # Use f-string for clarity
+        headers=auth_header
+    )
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "The specified footprint does not exist"  # Match your exception message
+
+
 def test_read_product_footprints_no_seeding(client, auth_header):
     response = client.get("/footprints/?limit=1", headers=auth_header)
     assert response.status_code == 200
     print(f"data = {response.json()['data']}")
     assert len(response.json()["data"]) == 1
+
 
 def test_read_product_footprints(client, auth_header, seed_database):
     response = client.get("/footprints/?offset=1", headers=auth_header)
