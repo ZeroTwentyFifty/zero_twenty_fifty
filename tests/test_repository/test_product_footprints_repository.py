@@ -10,7 +10,7 @@ from schemas.product_footprint import ProductFootprint
 from schemas.carbon_footprint import CarbonFootprint
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def valid_product_footprint_data(valid_carbon_footprint_data):
     data = {
         "id": "0c24b3eb-fb05-4353-ae08-a52ee051b392",
@@ -39,7 +39,7 @@ def valid_product_footprint_data(valid_carbon_footprint_data):
     return data
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def invalid_product_footprint_data(valid_carbon_footprint_data):
     data = {
         "specVersion": "1.0.0",
@@ -57,7 +57,7 @@ def invalid_product_footprint_data(valid_carbon_footprint_data):
     return data
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def two_product_footprints(valid_product_footprint_data, db_session):
     product_footprint_data1 = valid_product_footprint_data.copy()
     product_footprint_data1["id"] = "90163d8f-8465-4a6f-9e43-a58d68bef72f"

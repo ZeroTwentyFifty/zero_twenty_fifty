@@ -54,8 +54,6 @@ def test_product_footprint_id_field_is_unique(db_session):
     with pytest.raises(IntegrityError, match="duplicate key value violates unique constraint"):
         db_session.commit()
 
-    db_session.close()
-
 
 def test_product_footprint_deletion_results_in_carbon_footprint_deletion(db_session, valid_product_footprint_model, valid_carbon_footprint_model):
     """Tests if deleting a ProductFootprint cascades to CarbonFootprint"""
