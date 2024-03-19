@@ -355,3 +355,25 @@ class CarbonFootprint(BaseModel):
     def serialize_reference_period_end(self, referencePeriodEnd: AwareDatetime, _info):
         return referencePeriodEnd.isoformat()
 
+    @model_validator(mode='after')
+    def check_geography_fields(self):
+
+        def single_true(iterable):
+            i = iter(iterable)
+            return any(i) and not any(i)
+
+        values = (
+            self.geographyCountrySubdivision,
+            self.geographyCountry,
+            self.geographyRegionOrSubregion
+        )
+
+        # If all values are None, validation passes
+        if all(value is None for value in values):
+            return self
+
+        # If any values are present, then only one must be present
+        if not single_true(values):
+            raise ValueError('Only one field out of geographyCountrySubdivision, geographyCountry, and geographyRegionOrSubregion can present.')
+
+        return self

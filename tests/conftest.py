@@ -154,9 +154,9 @@ def valid_carbon_footprint_data():
         "boundaryProcessesDescription": "Description of boundary processes",
         "referencePeriodStart": datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
         "referencePeriodEnd": datetime(2023, 12, 31, tzinfo=timezone.utc).isoformat(),
-        "geographyCountrySubdivision": "AU",
-        "geographyCountry": "AU",
-        "geographyRegionOrSubregion": "Australia and New Zealand",
+        "geographyCountrySubdivision": None,
+        "geographyCountry": None,
+        "geographyRegionOrSubregion": None,
         "secondaryEmissionFactorSources": [
             {
                 "name": "ecoinvent",

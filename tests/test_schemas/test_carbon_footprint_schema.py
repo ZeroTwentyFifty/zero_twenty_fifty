@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 import json
 
 import pytest
+from pydantic import ValidationError
 
 from schemas.carbon_footprint import (
     CarbonFootprint, RegionOrSubregion, DeclaredUnit, BiogenicAccountingMethodology,
@@ -46,9 +47,6 @@ def test_carbon_footprint_schema_validation(valid_carbon_footprint_data):
     assert json_footprint_data["boundaryProcessesDescription"] == "Description of boundary processes"
     assert json_footprint_data["referencePeriodStart"] == "2023-01-01T00:00:00+00:00"
     assert json_footprint_data["referencePeriodEnd"] == "2023-12-31T00:00:00+00:00"
-    assert json_footprint_data["geographyCountrySubdivision"] == "AU"
-    assert json_footprint_data["geographyCountry"] == "AU"
-    assert json_footprint_data["geographyRegionOrSubregion"] == "Australia and New Zealand"
     assert json_footprint_data["secondaryEmissionFactorSources"] == [
         {
             "name": "ecoinvent",
@@ -198,3 +196,28 @@ def test_valid_product_or_sector_specific_rule(data):
 def test_invalid_product_or_sector_specific_rule(data):
     with pytest.raises(ValueError):
         ProductOrSectorSpecificRule(**data)
+
+
+test_cases = [
+    (None, None, None, True),  # All fields None - should pass
+    ('CA', None, None, True),  # Only geographyCountrySubdivision - should pass
+    (None, 'US', None, True),  # Only geographyCountry - should pass
+    (None, None, 'Northern America', True),  # Only geographyRegionOrSubregion - should pass
+    ('MX', 'US', None, False),  # Multiple fields present - should fail
+    ('MX', None, 'Europe', False),  # Multiple fields present - should fail
+]
+
+@pytest.mark.parametrize(
+    "geographyCountrySubdivision, geographyCountry, geographyRegionOrSubregion, expected_validity",
+    test_cases
+)
+def test_carbon_footprint_scope_validation(valid_carbon_footprint_data, geographyCountrySubdivision, geographyCountry, geographyRegionOrSubregion, expected_validity):
+    data = valid_carbon_footprint_data.copy()
+    data['geographyCountrySubdivision'] = geographyCountrySubdivision
+    data['geographyCountry'] = geographyCountry
+    data['geographyRegionOrSubregion'] = geographyRegionOrSubregion
+    if expected_validity:
+        CarbonFootprint(**data)  # Should validate successfully
+    else:
+        with pytest.raises(ValidationError):
+            CarbonFootprint(**data)
