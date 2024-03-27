@@ -46,7 +46,7 @@ def seed_database(client, auth_header, valid_json_product_footprint, num_footpri
         updated_uuid_pf = valid_json_product_footprint.copy()
         updated_uuid_pf["id"] = str(uuid.uuid4())
         response = client.post(
-            url="/footprints/create-product-footprint/",
+            url="/2/footprints/create-product-footprint/",
             json=updated_uuid_pf,
             headers=auth_header
         )
@@ -54,9 +54,15 @@ def seed_database(client, auth_header, valid_json_product_footprint, num_footpri
         assert response.json() == "Success"
 
 
+def test_list_product_footprints_path_structure(client):
+    response = client.get("/footprints/")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Not Found"
+
+
 def test_create_product_footprint(client, auth_header, valid_json_product_footprint):
     response = client.post(
-        url="/footprints/create-product-footprint/",
+        url="/2/footprints/create-product-footprint/",
         json=valid_json_product_footprint,
         headers=auth_header
     )
@@ -68,13 +74,13 @@ def test_create_product_footprint(client, auth_header, valid_json_product_footpr
 
 def test_read_product_footprint(client, auth_header, valid_json_product_footprint):
     _ = client.post(
-        url="/footprints/create-product-footprint/",
+        url="/2/footprints/create-product-footprint/",
         json=valid_json_product_footprint,
         headers=auth_header
     )
 
     response = client.get(
-        url="/footprints/3fa85f64-5717-4562-b3fc-2c963f66afa6/",
+        url="/2/footprints/3fa85f64-5717-4562-b3fc-2c963f66afa6/",
         headers=auth_header)
 
     assert response.status_code == 200
@@ -82,24 +88,24 @@ def test_read_product_footprint(client, auth_header, valid_json_product_footprin
 
 
 def test_read_product_footprint_not_found(client, auth_header):
-    non_existent_id = "00000000-0000-0000-0000-000000000000"  # Use a clearly invalid ID
+    non_existent_id = "00000000-0000-0000-0000-000000000000"
     response = client.get(
-        url=f"/footprints/{non_existent_id}/",  # Use f-string for clarity
+        url=f"/2/footprints/{non_existent_id}/",
         headers=auth_header
     )
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "The specified footprint does not exist"  # Match your exception message
+    assert response.json()["detail"] == "The specified footprint does not exist"
 
 
 def test_list_product_footprints_not_found(client, auth_header):
-    response = client.get("/footprints/", headers=auth_header)
+    response = client.get("/2/footprints/", headers=auth_header)
     assert response.status_code == 200
     assert len(response.json()["data"]) == 0
 
 
 def test_read_product_footprints(client, auth_header, seed_database):
-    response = client.get("/footprints/", headers=auth_header)
+    response = client.get("/2/footprints/", headers=auth_header)
     assert response.status_code == 200
     assert len(response.json()["data"]) == 5
     assert response.json()
@@ -108,7 +114,7 @@ def test_read_product_footprints(client, auth_header, seed_database):
 
 
 def test_read_product_footprints_with_offset(client, auth_header, seed_database):
-    response = client.get("/footprints/?offset=3", headers=auth_header)
+    response = client.get("/2/footprints/?offset=3", headers=auth_header)
     assert response.status_code == 200
     print(f"data = {response.json()['data']}")
     assert len(response.json()["data"]) == 2
@@ -118,14 +124,13 @@ def test_read_product_footprints_with_offset(client, auth_header, seed_database)
 
 
 def test_read_product_footprints_with_limit(client, auth_header, seed_database):
-    response = client.get("/footprints/?limit=3", headers=auth_header)
+    response = client.get("/2/footprints/?limit=3", headers=auth_header)
     assert response.status_code == 200
     print(f"data = {response.json()['data']}")
     assert len(response.json()["data"]) == 3
     assert response.json()
     assert response.json()["data"][1]
     assert response.json()["data"][2]
-
 
 # add a test for bad requests, when i hit "/footprints/?limit=50, it returned a NoneType
 # error for the product_footprint call with has no attribute, need to catch that better
