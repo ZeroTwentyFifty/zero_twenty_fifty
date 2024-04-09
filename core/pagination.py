@@ -91,7 +91,7 @@ class PaginationMiddleware(BaseHTTPMiddleware):
 
         limit = request.query_params.get('limit')
         print(f"we have a limit here: {limit}")
-        offset = request.query_params.get('offset')
+        offset = request.query_params.get('offset', 0)
         if limit:
             # Get current URL, adjust for next page
             http_url = request.url
