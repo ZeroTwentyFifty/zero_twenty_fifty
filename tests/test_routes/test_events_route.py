@@ -1,6 +1,6 @@
 def test_get_events(client, auth_header):
     response = client.post(
-        url="/events",
+        url="/2/events",
         headers=auth_header
     )
 
@@ -12,7 +12,7 @@ def test_get_events(client, auth_header):
 
 
 def test_get_events_unauthenticated(client):
-    response = client.post("/events")
+    response = client.post("/2/events")
 
     assert response.status_code == 403
     assert "AccessDenied" in response.text
