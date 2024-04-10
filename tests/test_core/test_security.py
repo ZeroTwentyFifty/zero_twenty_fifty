@@ -1,6 +1,7 @@
 import pytest
-from datetime import timedelta
+from datetime import timedelta, datetime
 
+import freezegun
 from jose import jwt
 from jose.exceptions import JWSError, ExpiredSignatureError
 
@@ -39,18 +40,14 @@ def test_create_access_token_invalid_algorithm(test_data, monkeypatch):
 
 
 def test_token_expiration(test_data):
-    """Test that the token becomes invalid when the expiration time passes."""
-    expires_delta = timedelta(seconds=5)  # Short expiration time for faster testing
-    token = create_access_token(test_data, expires_delta)
+    expires_delta: timedelta = timedelta(seconds=5)
+    token: str = create_access_token(test_data, expires_delta)
 
     # Decode the token immediately - should be valid
     payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
     assert payload.get("sub") == test_data["sub"]
 
     # Wait for the token to expire
-    # TODO: Improve this, use a more suitable library instead of the wait, just slows everything down.
-    import time
-    time.sleep(expires_delta.seconds + 1)  # Wait a little longer than the expiration
-
-    with pytest.raises(ExpiredSignatureError):
-        jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+    with freezegun.freeze_time(datetime.utcnow() + expires_delta + timedelta(seconds=1)):
+        with pytest.raises(ExpiredSignatureError):
+            jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
