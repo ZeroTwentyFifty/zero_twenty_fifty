@@ -1,6 +1,7 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
+import freezegun
 import pytest
 
 
@@ -72,6 +73,22 @@ def test_create_product_footprint(client, auth_header, valid_json_product_footpr
     assert response.json() == "Success"
 
 
+def test_create_product_footprint_with_expired_token(client, auth_header, valid_json_product_footprint):
+    with freezegun.freeze_time(datetime.utcnow() + timedelta(days=1)):
+
+        response = client.post(
+            url="/2/footprints/create-product-footprint/",
+            json=valid_json_product_footprint,
+            headers=auth_header
+        )
+
+        assert response.status_code == 401
+        assert response.json() == {
+            "message": "The specified access token has expired",
+            "code": "TokenExpired"
+        }
+
+
 def test_read_product_footprint(client, auth_header, valid_json_product_footprint):
     _ = client.post(
         url="/2/footprints/create-product-footprint/",
@@ -85,6 +102,25 @@ def test_read_product_footprint(client, auth_header, valid_json_product_footprin
 
     assert response.status_code == 200
     assert response.json()["data"]["companyName"] == "Clean Product Company"
+
+
+def test_read_product_footprint_with_expired_token(client, auth_header, valid_json_product_footprint):
+    _ = client.post(
+        url="/2/footprints/create-product-footprint/",
+        json=valid_json_product_footprint,
+        headers=auth_header
+    )
+    with freezegun.freeze_time(datetime.utcnow() + timedelta(days=1)):
+
+        response = client.get(
+            url="/2/footprints/3fa85f64-5717-4562-b3fc-2c963f66afa6/",
+            headers=auth_header)
+
+        assert response.status_code == 401
+        assert response.json() == {
+            "message": "The specified access token has expired",
+            "code": "TokenExpired"
+        }
 
 
 def test_read_product_footprint_not_found(client, auth_header):
@@ -102,6 +138,18 @@ def test_list_product_footprints_not_found(client, auth_header):
     response = client.get("/2/footprints/", headers=auth_header)
     assert response.status_code == 200
     assert len(response.json()["data"]) == 0
+
+
+def test_list_product_footprint_with_expired_token(client, auth_header, valid_json_product_footprint):
+    with freezegun.freeze_time(datetime.utcnow() + timedelta(days=1)):
+
+        response = client.get("/2/footprints/", headers=auth_header)
+
+        assert response.status_code == 401
+        assert response.json() == {
+            "message": "The specified access token has expired",
+            "code": "TokenExpired"
+        }
 
 
 def test_read_product_footprints(client, auth_header, seed_database):

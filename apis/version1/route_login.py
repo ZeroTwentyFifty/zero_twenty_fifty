@@ -1,23 +1,25 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from fastapi import APIRouter
 from fastapi import Depends
-from fastapi import HTTPException
 from fastapi.responses import JSONResponse
-from jose import jwt
-from jose import JWTError, ExpiredSignatureError
 from sqlalchemy.orm import Session
 
 from core.config import settings
 from core.hashing import Hasher
-from core.security import create_access_token
 from core.oauth2_client_credentials import OAuth2ClientCredentialsRequestForm, OAuth2ClientCredentials
 from db.repository.login import get_user
 from db.session import get_db
 from schemas.token import Token
+from authx import AuthX, AuthXConfig
 
 router = APIRouter()
 oauth2_scheme = OAuth2ClientCredentials(tokenUrl="/auth/token")
+
+config = AuthXConfig()
+config.JWT_SECRET_KEY = "SECRET_KEY"
+config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=2)
+security = AuthX(config=config)
 
 
 def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):
@@ -44,31 +46,8 @@ def login_for_access_token(
     user = authenticate_user(client_id, client_secret, db)
     if not user:    
         return JSONResponse({"message": "Access Denied", "code": "AccessDenied"}, status_code=403)
-    access_token: str = create_access_token(data={"sub": user.email})
+
+    # TODO: Remove the sub with user.email, and update the uid to be something more legitimate
+    access_token: str = security.create_access_token(uid="USER_ID", sub=user.email)
+
     return {"access_token": access_token, "token_type": "bearer"}
-
-
-def get_current_user_from_token(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    print("We are inside: get_current_user_from_token")
-    try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
-        )
-        username: str = payload.get("sub")
-        print("username/email extracted is ", username)
-        if username is None:
-            return JSONResponse({"message": "Access Denied", "code": "AccessDenied"}, status_code=403)
-    except ExpiredSignatureError:
-        return JSONResponse({"message": "The specified access token has expired", "code": "TokenExpired"}, status_code=401)
-    except JWTError:
-        raise HTTPException(
-                status_code=403,
-                detail="AccessDenied OAuth2 Client Credentials",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        # return JSONResponse({"message": "Access Denied", "code": "AccessDenied"}, status_code=403)
-    
-    user = get_user(username=username, db=db)
-    if user is None:
-        return JSONResponse({"message": "Access Denied", "code": "AccessDenied"}, status_code=403)
-    return user

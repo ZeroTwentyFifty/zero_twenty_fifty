@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from apis.version1.route_login import get_current_user_from_token
+from apis.version1.route_login import security
 from core.exceptions import NoSuchFootprintException
 from core.pagination import JSONAPIPage
 from db.models.user import User
@@ -27,7 +27,7 @@ TODO: Implement full CRUD functionality for this module.
 def create_product_footprint(
     product_footprint: ProductFootprintSchema,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user_from_token),
+    current_user: User = Depends(security.access_token_required),
 ):
     product_footprint = create_new_product_footprint(product_footprint=product_footprint, db=db)
     if product_footprint:
@@ -35,7 +35,7 @@ def create_product_footprint(
 
 
 @router.get("/{id}", response_model=dict[str, ProductFootprintSchema], status_code=200)
-def read_product_footprint(id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user_from_token)):
+def read_product_footprint(id: str, db: Session = Depends(get_db), current_user: User = Depends(security.access_token_required)):
     """
     TODO: Replace the {id} with a Pydantic inout validation schema for UUIDv4 values
     """
@@ -120,7 +120,7 @@ def read_product_footprint(id: str, db: Session = Depends(get_db), current_user:
 
 
 @router.get("", response_model=JSONAPIPage[ProductFootprintSchema], status_code=200)
-def list_footprints(db: Session = Depends(get_db), current_user: User = Depends(get_current_user_from_token)):
+def list_footprints(db: Session = Depends(get_db), current_user: User = Depends(security.access_token_required)):
     """
     TODO: This route is currently not tested due to the pagination module being too difficult
         to programmatically interact with, during alpha, it will be tuned up and formed into
@@ -128,6 +128,7 @@ def list_footprints(db: Session = Depends(get_db), current_user: User = Depends(
         to understand, the code was added in so that the PoC could move forward and an ALpha
         release needs to happen sooner rather than later.
     """
+    print(current_user)
     product_footprints = list_product_footprints(db=db)
     if not product_footprints or len(product_footprints) == 0:
         return {'data': []}
