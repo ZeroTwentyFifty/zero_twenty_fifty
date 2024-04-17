@@ -1,3 +1,5 @@
+from authx import AuthX, AuthXConfig
+from authx.exceptions import JWTDecodeError, MissingTokenError
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError, HTTPException
 from fastapi.encoders import jsonable_encoder
@@ -23,6 +25,22 @@ def start_application():
 app = start_application()
 
 app.add_middleware(PaginationMiddleware)
+
+auth = AuthXConfig()
+auth.JWT_SECRET_KEY = "SECRET_KEY"
+# auth.JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=2)
+security = AuthX(config=auth)
+security.handle_errors(app)
+
+
+@app.exception_handler(JWTDecodeError)
+async def jwt_decode_error_handler(request, exc):
+    return JSONResponse({"message": "The specified access token has expired", "code": "TokenExpired"}, status_code=401)
+
+
+@app.exception_handler(MissingTokenError)
+async def missing_bearer_token_error_handler(request, exc):
+    return JSONResponse({"message": "Bad Request", "code": "BadRequest"}, status_code=400)
 
 
 @app.exception_handler(RequestValidationError)

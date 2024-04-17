@@ -67,6 +67,45 @@ files = [
 test = ["coverage", "mypy", "pexpect", "ruff", "wheel"]
 
 [[package]]
+name = "authx"
+version = "1.1.1"
+description = "Ready to use and customizable Authentications and Oauth2 management for FastAPI"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "authx-1.1.1-py3-none-any.whl", hash = "sha256:50eadce52e91f90d4218b324d60cf90e67fa3db03bd3c92281cf7bfe6df43674"},
+    {file = "authx-1.1.1.tar.gz", hash = "sha256:85cd884528c1ec8a4aed75115b87d57ec7d123c25c3c8f14bd2a375bdf9211e4"},
+]
+
+[package.dependencies]
+fastapi = ">=0.100.0,<0.120.0"
+pydantic = ">=2.0.0,<3.0.0"
+pydantic-settings = ">=2.1.0"
+pyjwt = {version = ">=2.6.0,<3.0.0", extras = ["crypto"]}
+python-dateutil = ">=2.8,<3.0.0"
+python-jose = ">=3.3.0,<4.0.0"
+pytz = ">=2023.3,<2025.0"
+
+[[package]]
+name = "authx-extra"
+version = "1.1.1"
+description = "Extra utilities for authx, including session, profiler & caching ✨"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "authx_extra-1.1.1-py3-none-any.whl", hash = "sha256:0389fa0ee17c42a57f2b6affe2cf3ca476d4540824b7a4484851a703605329ec"},
+    {file = "authx_extra-1.1.1.tar.gz", hash = "sha256:5ed0ba8d3beb4d721a0e56409131d163b14a7b0985c6e7ae028aa10f6d739899"},
+]
+
+[package.dependencies]
+authx = ">=1.0.0"
+
+[package.extras]
+cache = ["redis (>=4.3.3,<5.0.4)"]
+metrics = ["prometheus-client (>=0.16.0,<1.0.0)"]
+profiler = ["pyinstrument (>=4.1.1,<4.7.0)"]
+
+[[package]]
 name = "bcrypt"
 version = "4.1.2"
 description = "Modern password hashing for your software and your servers"
@@ -1511,6 +1550,26 @@ plugins = ["importlib-metadata"]
 windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
+name = "pyjwt"
+version = "2.8.0"
+description = "JSON Web Token implementation in Python"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "PyJWT-2.8.0-py3-none-any.whl", hash = "sha256:59127c392cc44c2da5bb3192169a91f429924e17aff6534d70fdc02ab3e04320"},
+    {file = "PyJWT-2.8.0.tar.gz", hash = "sha256:57e28d156e3d5c10088e0c68abb90bfac3df82b40a71bd0daa20c65ccd5c23de"},
+]
+
+[package.dependencies]
+cryptography = {version = ">=3.4.0", optional = true, markers = "extra == \"crypto\""}
+
+[package.extras]
+crypto = ["cryptography (>=3.4.0)"]
+dev = ["coverage[toml] (==5.0.4)", "cryptography (>=3.4.0)", "pre-commit", "pytest (>=6.0.0,<7.0.0)", "sphinx (>=4.5.0,<5.0.0)", "sphinx-rtd-theme", "zope.interface"]
+docs = ["sphinx (>=4.5.0,<5.0.0)", "sphinx-rtd-theme", "zope.interface"]
+tests = ["coverage[toml] (==5.0.4)", "pytest (>=6.0.0,<7.0.0)"]
+
+[[package]]
 name = "pytest"
 version = "7.4.4"
 description = "pytest: simple powerful testing with Python"
@@ -1631,6 +1690,17 @@ files = [
 
 [package.extras]
 dev = ["atomicwrites (==1.4.1)", "attrs (==23.2.0)", "coverage (==7.4.1)", "hatch", "invoke (==2.2.0)", "more-itertools (==10.2.0)", "pbr (==6.0.0)", "pluggy (==1.4.0)", "py (==1.11.0)", "pytest (==8.0.0)", "pytest-cov (==4.1.0)", "pytest-timeout (==2.2.0)", "pyyaml (==6.0.1)", "ruff (==0.2.1)"]
+
+[[package]]
+name = "pytz"
+version = "2024.1"
+description = "World timezone definitions, modern and historical"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pytz-2024.1-py2.py3-none-any.whl", hash = "sha256:328171f4e3623139da4983451950b28e95ac706e13f3f2630a879749e7a8b319"},
+    {file = "pytz-2024.1.tar.gz", hash = "sha256:2a29735ea9c18baf14b448846bde5a48030ed267578472d8955cd0e7443a9812"},
+]
 
 [[package]]
 name = "pyyaml"
@@ -2239,4 +2309,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "e9671cff0ca0090a153fc24fb89018e453c647df47b3ee05ebe3a3cab2ae0aa4"
+content-hash = "8031771942d28664f9b1bd4fe8ca0f675373cd2b1551ecd509dbf90e82d686da"

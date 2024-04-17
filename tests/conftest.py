@@ -4,12 +4,16 @@ from datetime import datetime, timezone
 from typing import Any
 from typing import Generator
 
+from authx.exceptions import JWTDecodeError, MissingTokenError
 import pytest
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from fastapi.testclient import TestClient
 from fastapi_pagination import add_pagination
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # this is to include backend dir in sys.path so that we can import from db,main.py
@@ -25,8 +29,6 @@ from schemas.carbon_footprint import (
 from db.session import get_db
 from db.repository.users import create_new_user
 from schemas.user import UserCreate
-
-
 
 
 def start_application():
@@ -46,11 +48,21 @@ SessionTesting = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 @pytest.fixture
 def app() -> Generator[FastAPI, Any, None]:
     """
-    Create a fresh database on each test case.
+    TODO: This needs a serious refactor, the way that the app object is instantiated should be
+        identical to the way that it is instantiated in the main.py script, in fact, they should be literally
+        the same thing, so that testing can be done properly.
     """
     Base.metadata.create_all(engine)
     _app = start_application()
     add_pagination(_app)
+
+    @_app.exception_handler(JWTDecodeError)
+    async def jwt_decode_error_handler(request, exc):
+        return JSONResponse({"message": "The specified access token has expired", "code": "TokenExpired"}, status_code=401)
+
+    @_app.exception_handler(MissingTokenError)
+    async def missing_bearer_token_error_handler(request, exc):
+        return JSONResponse({"message": "Bad Request", "code": "BadRequest"}, status_code=400)
 
     yield _app
     Base.metadata.drop_all(engine)
