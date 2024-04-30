@@ -134,7 +134,10 @@ def test_read_product_footprint_not_found(client, auth_header):
     )
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "The specified footprint does not exist"
+    assert response.json() == {
+        "message": "The specified footprint does not exist",
+        "code": "NoSuchFootprint"
+    }
 
 
 def test_list_product_footprints_not_found(client, auth_header):
