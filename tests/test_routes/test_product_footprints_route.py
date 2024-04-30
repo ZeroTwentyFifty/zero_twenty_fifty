@@ -43,9 +43,10 @@ def seed_database(client, auth_header, valid_json_product_footprint, num_footpri
         auth_header: Authentication headers for the request.
         num_footprints: Number of footprints to add.
     """
-    for _ in range(num_footprints):
+    for i in range(num_footprints):
         updated_uuid_pf = valid_json_product_footprint.copy()
         updated_uuid_pf["id"] = str(uuid.uuid4())
+        updated_uuid_pf["productCategoryCpc"] = str(22220 + i)
         response = client.post(
             url="/2/footprints/create-product-footprint/",
             json=updated_uuid_pf,
@@ -179,6 +180,61 @@ def test_read_product_footprints_with_limit(client, auth_header, seed_database):
     assert response.json()
     assert response.json()["data"][1]
     assert response.json()["data"][2]
+
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_eq(client, auth_header, seed_database):
+    filter_param = "$filter=productCategoryCpc eq '22222'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 1  # Assert that only 1 footprint is returned
+    for footprint in footprints:
+        assert int(footprint["productCategoryCpc"]) == 22222
+
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_lt(client, auth_header, seed_database):
+    filter_param = "$filter=productCategoryCpc lt '22222'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 2  # Assert that 2 footprints are returned
+    for footprint in footprints:
+        assert int(footprint["productCategoryCpc"]) < 22222
+
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_le(client, auth_header, seed_database):
+    filter_param = "$filter=productCategoryCpc le '22222'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 3  # Assert that 3 footprints are returned
+    for footprint in footprints:
+        assert int(footprint["productCategoryCpc"]) <= 22222
+
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_gt(client, auth_header, seed_database):
+    filter_param = "$filter=productCategoryCpc gt '22222'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 2  # Assert that 2 footprints are returned
+    for footprint in footprints:
+        assert int(footprint["productCategoryCpc"]) > 22222
+
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_ge(client, auth_header, seed_database):
+    filter_param = "$filter=productCategoryCpc ge '22222'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 3  # Assert that 3 footprints are returned
+    for footprint in footprints:
+        assert int(footprint["productCategoryCpc"]) >= 22222
 
 # add a test for bad requests, when i hit "/footprints/?limit=50, it returned a NoneType
 # error for the product_footprint call with has no attribute, need to catch that better
