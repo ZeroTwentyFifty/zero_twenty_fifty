@@ -56,9 +56,9 @@ def test_login_for_access_token_failure(client):
         },
     )
 
-    assert response.status_code == 403
-    assert response.json()["message"] == "Access Denied"
-    assert response.json()["code"] == "AccessDenied"
+    assert response.status_code == 401
+    assert response.json()["error"] == "invalid_client"
+    assert response.json()["error_description"] == "Authentication failed"
 
 
 def test_authenticate_user_success(client, test_user, test_credentials, db_session):

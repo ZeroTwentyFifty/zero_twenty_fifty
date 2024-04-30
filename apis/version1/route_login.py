@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from core.config import settings
+from core.error_responses import BadRequestError
 from core.hashing import Hasher
 from core.oauth2_client_credentials import OAuth2ClientCredentialsRequestForm, OAuth2ClientCredentials
 from db.repository.login import get_user
@@ -41,11 +42,11 @@ def login_for_access_token(
         client_id = form_data.client_id
         client_secret = form_data.client_secret
     else:
-        return JSONResponse({"message": "Bad Request", "code": "BadRequest"}, status_code=400)
+        return BadRequestError().to_json_response()
 
     user = authenticate_user(client_id, client_secret, db)
     if not user:    
-        return JSONResponse({"message": "Access Denied", "code": "AccessDenied"}, status_code=403)
+        return JSONResponse({"error": "invalid_client", "error_description": "Authentication failed"}, status_code=400)
 
     # TODO: Remove the sub with user.email, and update the uid to be something more legitimate
     access_token: str = security.create_access_token(uid="USER_ID", sub=user.email)
