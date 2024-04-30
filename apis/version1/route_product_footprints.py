@@ -4,7 +4,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from apis.version1.route_login import security
-from core.exceptions import NoSuchFootprintException
+from core.error_responses import NoSuchFootprintError
 from core.pagination import JSONAPIPage
 from db.models.user import User
 from db.repository.product_footprints import create_new_product_footprint
@@ -42,7 +42,7 @@ def read_product_footprint(id: str, db: Session = Depends(get_db), current_user:
     product_footprint = retrieve_product_footprint(id=id, db=db)
 
     if not product_footprint:
-        raise NoSuchFootprintException
+        return NoSuchFootprintError().to_json_response()
 
     secondary_emission_factor_sources: list[EmissionFactorDS] = []
     for dataset in product_footprint.carbon_footprint.secondary_emission_factor_sources:
