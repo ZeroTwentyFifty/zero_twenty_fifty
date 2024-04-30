@@ -43,10 +43,12 @@ def seed_database(client, auth_header, valid_json_product_footprint, num_footpri
         auth_header: Authentication headers for the request.
         num_footprints: Number of footprints to add.
     """
+    base_time = datetime(2023, 6, 1, tzinfo=timezone.utc)
     for i in range(num_footprints):
         updated_uuid_pf = valid_json_product_footprint.copy()
         updated_uuid_pf["id"] = str(uuid.uuid4())
         updated_uuid_pf["productCategoryCpc"] = str(22220 + i)
+        updated_uuid_pf["created"] = (base_time + timedelta(days=i)).isoformat() + 'Z'
         response = client.post(
             url="/2/footprints/create-product-footprint/",
             json=updated_uuid_pf,
@@ -235,6 +237,55 @@ def test_list_product_footprints_with_filter_ge(client, auth_header, seed_databa
     assert len(footprints) == 3  # Assert that 3 footprints are returned
     for footprint in footprints:
         assert int(footprint["productCategoryCpc"]) >= 22222
+
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_created_eq(client, auth_header, seed_database):
+    filter_param = "$filter=created eq '2023-06-03T00:00:00.000Z'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 1
+    for footprint in footprints:
+        assert footprint["created"] == "2023-06-03T00:00:00.000Z"
+
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_created_lt(client, auth_header, seed_database):
+    filter_param = "$filter=created lt '2023-06-03T00:00:00.000Z'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 2
+
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_created_le(client, auth_header, seed_database):
+    filter_param = "$filter=created le '2023-06-03T00:00:00.000Z'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 3
+    for footprint in footprints:
+        assert footprint["created"] <= "2023-06-18T22:38:02.331Z"
+
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_created_gt(client, auth_header, seed_database):
+    filter_param = "$filter=created gt '2023-06-03T00:00:00.000Z'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 2
+
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_created_ge(client, auth_header, seed_database):
+    filter_param = "$filter=created ge '2023-06-03T00:00:00.000Z'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 3
 
 # add a test for bad requests, when i hit "/footprints/?limit=50, it returned a NoneType
 # error for the product_footprint call with has no attribute, need to catch that better
