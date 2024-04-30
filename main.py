@@ -49,17 +49,3 @@ def standard_validation_exception_handler(request: Request, exc: RequestValidati
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
     )
-
-
-@app.exception_handler(RequestValidationError)
-def custom_exception_handler(request: Request, exc: RequestValidationError):
-    if request.url.path == '/auth/token':
-        return JSONResponse({"message": "Access Denied", "code": "AccessDenied"}, status_code=403)
-    else:
-        return standard_validation_exception_handler(request, exc)
-
-
-@app.exception_handler(HTTPException)
-def custom_oauth2_access_denied_handler(request: Request, exc: HTTPException):
-    if exc.detail == "AccessDenied OAuth2 Client Credentials":
-        return JSONResponse({"message": "Access Denied", "code": "AccessDenied"}, status_code=403)
