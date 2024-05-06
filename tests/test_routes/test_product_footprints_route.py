@@ -14,7 +14,7 @@ def valid_json_product_footprint(valid_carbon_footprint_data):
             "3fa85f64-5717-4562-b3fc-2c963f66af10"
         ],
         "version": 1,
-        "created": "2023-06-18T22:38:02.331Z",
+        "created": "2023-06-03T00:00:00.000Z",
         "updated": "2023-06-18T22:38:02.331Z",
         "status": "Active",
         "statusComment": "string",
@@ -44,11 +44,13 @@ def seed_database(client, auth_header, valid_json_product_footprint, num_footpri
         num_footprints: Number of footprints to add.
     """
     base_time = datetime(2023, 6, 1, tzinfo=timezone.utc)
+    base_updated_time = datetime(2023, 7, 1, tzinfo=timezone.utc)
     for i in range(num_footprints):
         updated_uuid_pf = valid_json_product_footprint.copy()
         updated_uuid_pf["id"] = str(uuid.uuid4())
         updated_uuid_pf["productCategoryCpc"] = str(22220 + i)
-        updated_uuid_pf["created"] = (base_time + timedelta(days=i)).isoformat() + 'Z'
+        updated_uuid_pf["created"] = (base_time + timedelta(days=i)).isoformat()
+        updated_uuid_pf["updated"] = (base_updated_time + timedelta(days=i)).isoformat()
         response = client.post(
             url="/2/footprints/create-product-footprint/",
             json=updated_uuid_pf,
@@ -285,6 +287,51 @@ def test_list_product_footprints_with_filter_created_gt(client, auth_header, see
 @pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
 def test_list_product_footprints_with_filter_created_ge(client, auth_header, seed_database):
     filter_param = "$filter=created ge '2023-06-03T00:00:00.000Z'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 3
+
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_updated_eq(client, auth_header, seed_database):
+    filter_param = "$filter=updated eq '2023-07-03T00:00:00.000Z'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 1
+    for footprint in footprints:
+        assert footprint["updated"] == "2023-07-03T00:00:00.000Z"
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_updated_lt(client, auth_header, seed_database):
+    filter_param = "$filter=updated lt '2023-07-03T00:00:00.000Z'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 2
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_updated_le(client, auth_header, seed_database):
+    filter_param = "$filter=updated le '2023-07-03T00:00:00.000Z'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 3
+
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_updated_gt(client, auth_header, seed_database):
+    filter_param = "$filter=updated gt '2023-07-03T00:00:00.000Z'"
+    response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
+    assert response.status_code == 200
+    footprints = response.json()["data"]
+    assert len(footprints) == 2
+
+
+@pytest.mark.xfail(reason="Filter feature not implemented", strict=True)
+def test_list_product_footprints_with_filter_updated_ge(client, auth_header, seed_database):
+    filter_param = "$filter=updated ge '2023-07-03T00:00:00.000Z'"
     response = client.get(f"/2/footprints/?{filter_param}", headers=auth_header)
     assert response.status_code == 200
     footprints = response.json()["data"]
