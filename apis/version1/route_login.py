@@ -25,11 +25,10 @@ security = AuthX(config=config)
 
 def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):
     user = get_user(username=username, db=db)
-    print(user)
     if not user:
-        return False
+        return None
     if not Hasher.verify_password(plain_password=password, hashed_password=user.hashed_password):
-        return False
+        return None
     return user
 
 
