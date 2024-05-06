@@ -14,7 +14,19 @@ def test_credentials():
 
 @pytest.mark.conformance
 def test_001_authentication_against_default_endpoint_success(client, test_user, test_credentials):
-    """Test Case 001: Authentication against default endpoint - Success"""
+    """
+    5.1. Test Case 001: Authentication against default endpoint - Success
+
+    Tests the target host system's ability to authenticate a data recipient through the Action Authenticate endpoint offered through the default path /auth/token.
+
+    Request:
+    An authentication POST request must be sent to the auth/token endpoint of the test target host system with correct credentials the syntax specified in PACT Tech Specs V2.2 § api-action-auth-request (the credentials need not be correct).
+
+    Expected Response:
+    The test target host system must respond with 200 OK and a JSON body containing the access token, as specified in PACT Tech Specs V2.2 § api-action-auth-response.
+
+    Note: From v2.1 onwards, host systems can also use a custom AuthEndpoint for authentication, specified in an OpenId Provider Configuration Document. This is tested through § 6.1 Test Case 012: OpenId Connect-based Authentication Flow.
+    """
     username, password = test_credentials
 
     response = client.post(
@@ -38,7 +50,17 @@ def test_001_authentication_against_default_endpoint_success(client, test_user, 
     strict=True
 )
 def test_001_authentication_against_default_endpoint_failure(client):
-    """Test Case 001: Authentication against default endpoint - Failure"""
+    """
+    5.1. Test Case 001: Authentication against default endpoint - Failure
+
+    Tests the target host system's ability to authenticate a data recipient through the Action Authenticate endpoint offered through the default path /auth/token.
+
+    Request:
+    An authentication POST request must be sent to the auth/token endpoint of the test target host system with incorrect credentials the syntax specified in PACT Tech Specs V2.2 § api-action-auth-request (the credentials need not be correct).
+
+    Expected Response:
+    Depending on whether authentication through /auth/token is supported, the test target host system must respond with either 200 OK and a JSON body containing the access token, as specified in PACT Tech Specs V2.2 § api-action-auth-response, or 400 Bad Request and a JSON body containing an error, as specified in PACT Tech Specs V2.2 § api-action-auth-response. In this case, the testing party must execute the test case § 6.1 Test Case 012: OpenId Connect-based Authentication Flow.
+    """
     test_username = "invalid_username"
     test_password = "invalid_password"
 
@@ -58,7 +80,17 @@ def test_001_authentication_against_default_endpoint_failure(client):
 
 @pytest.mark.conformance
 def test_002_authentication_with_invalid_credentials_against_default_endpoint(client):
-    """Test Case 002: Authentication with invalid credentials against default endpoint"""
+    """
+    Test Case 002: Authentication with invalid credentials against default endpoint
+
+    Tests the target host system’s ability to reject an authentication request with invalid credentials through the default endpoint /auth/token.
+
+    Request:
+    A test case similar to Test Case 001: Authentication against default endpoint but performed with incorrect credentials (i.e. the client id and/or client secret are unknown to the target host system).
+
+    Expected Response:
+    The target host system responds with 400 Bad Request and a JSON body containing the error "invalid_client", as specified in PACT Tech Specs V2.2 § api-action-auth-response.
+    """
     test_username = "invalid_username"
     test_password = "invalid_password"
 
@@ -78,7 +110,19 @@ def test_002_authentication_with_invalid_credentials_against_default_endpoint(cl
 
 @pytest.mark.conformance
 def test_003_get_all_footprints(client, auth_header):
-    """Test Case 003: Get All Footprints"""
+    """
+    Test Case 003: Get All Footprints
+
+    Tests the target host system’s ability to list all available PCFs.
+
+    Request:
+    A ListFootPrints GET request must be sent to the /2/footprints endpoint of the test target host system with a valid access token and the syntax specified in PACT Tech Specs V2.2 § api-action-list-request.
+
+    No additional request parameters, such as limit or filter, must be defined.
+
+    Expected Response:
+    The test target host system must respond with 200 OK and a JSON body containing the list of all available PCFs, as specified in PACT Tech Specs V2.2 § api-action-list-response.
+    """
     response = client.get("/2/footprints/", headers=auth_header)
 
     assert response.status_code == 200
@@ -87,7 +131,19 @@ def test_003_get_all_footprints(client, auth_header):
 
 @pytest.mark.conformance
 def test_004_get_limited_list_of_footprints(client, auth_header):
-    """Test Case 004: Get Limited List of Footprints"""
+    """
+    Test Case 004: Get Limited List of Footprints
+
+    Tests the target host system’s ability to list a limited number of PCFs when the limit parameter is set by the data recipient.
+
+    Request:
+    A ListFootPrints GET request must be sent to the /2/footprints endpoint of the test target host system with the limit parameter, a valid access token and the syntax specified in PACT Tech Specs V2.2 § api-action-list-request.
+
+    Expected Response:
+    The test target host system must respond with either an HTTP status code 200 "OK" with a response body containing a list of PCFs with a length equal to or smaller than the limit set in the request, as specified in PACT Tech Specs V2.2 § api-action-list-response. Unless the total number of available PCFs is equal to or smaller than the limit set in the request, the test target host system must return a Link header or an HTTP status code 202 and an empty body
+
+    NOTE: For testing purposes it is recommended to set the limit to a small number (e.g., 2) to ensure that pagination is tested.
+    """
     limit = 2
     response = client.get(f"/2/footprints/?limit={limit}", headers=auth_header)
 
@@ -102,7 +158,21 @@ def test_004_get_limited_list_of_footprints(client, auth_header):
 # This test doesn't work as intended
 @pytest.mark.conformance
 def test_005_pagination_link_implementation_of_action_listfootprints(client, auth_header):
-    """Test Case 005: Pagination link implementation of Action ListFootprints"""
+    """
+    Test Case 005: Pagination link implementation of Action ListFootprints
+
+    NOTE: This test presupposes the completion of § 5.4 Test Case 004: Get Limited List of Footprints and uses the link returned in the header. If § 5.4 Test Case 004: Get Limited List of Footprints fails, this test can be skipped.
+
+    Tests the target host system’s ability to return PCFs when the same pagination link, returned through the link header, is called multiple times.
+
+    Request:
+    The testing party calls the ListFootprints action (PACT Tech Specs V2.2 § api-action-list-request) with a valid access token such that a link header is returned by the target host system. The testing party selects a pagination link from a link header at random to perform the tests against. The testing party then calls the pagination link 2 or more times.
+
+    This test must conclude within 180 seconds after the pagination link was retrieved originally.
+
+    Expected Response:
+    The test target host system must respond with either 200 OK or 202 Accepted and a JSON body containing PCFs. The contents of the response bodies should be the same across all calls to the pagination link.
+    """
 
     # First, we need to get a pagination link from the Link header
     limit = 2
@@ -143,7 +213,19 @@ def test_005_pagination_link_implementation_of_action_listfootprints(client, aut
 
 @pytest.mark.conformance
 def test_006_attempt_listfootprints_with_expired_token(client, auth_header):
-    """Test Case 006: Attempt ListFootprints with Expired Token"""
+    """
+    Test Case 006: Attempt ListFootprints with Expired Token
+
+    Tests the target host system’s ability to reject a ListFootprints request with an expired access token with the correct error response.
+
+    Request:
+    A ListFootprints GET request must be sent to the /2/footprints endpoint of the test target host system with an expired access token and the syntax specified in PACT Tech Specs V2.2 § api-action-list-request.
+
+    Expected Response:
+    The test target host system must respond with a 401 Unauthorized and a JSON body that should contain the error response TokenExpired, as specified in PACT Tech Specs V2.2 § api-error-responses.
+
+    NOTE: Since the access token is expired, re-authentication should in principle solve the issue. By returning the HTTP error code 401 (instead of, e.g., 403), the host system signals that re-authentication should be attempted.
+    """
 
     with freezegun.freeze_time(datetime.utcnow() + timedelta(days=1)):
         response = client.get("/2/footprints/", headers=auth_header)
@@ -157,7 +239,19 @@ def test_006_attempt_listfootprints_with_expired_token(client, auth_header):
 
 @pytest.mark.conformance
 def test_007_attempt_listfootprints_with_invalid_token(client):
-    """Test Case 007: Attempt ListFootprints with Invalid Token"""
+    """
+    Test Case 007: Attempt ListFootPrints with Invalid Token
+
+    Tests the target host system’s ability to reject a ListFootprints request with an invalid access token with the correct error response.
+
+    Request:
+    A ListFootprints GET request must be sent to the /2/footprints endpoint of the test target host system with an invalid access token and the syntax specified in PACT Tech Specs V2.2 § api-action-list-request.
+
+    Expected Response:
+    The test target host system must respond with a 403 Forbidden and a JSON body containing the error response AccessDenied, as specified in PACT Tech Specs V2.2 § api-error-responses.
+
+    NOTE: Since the access token is invalid, re-authentication cannot solve the issue. By returning the HTTP error code 403 (instead of, e.g., 401), the host system signals that there is no gain in re-authenticating.
+    """
 
     # Create an invalid token by modifying a valid token
     invalid_token = 'invalid-token'
@@ -171,7 +265,17 @@ def test_007_attempt_listfootprints_with_invalid_token(client):
 
 @pytest.mark.conformance
 def test_008_get_footprint(client, auth_header, valid_json_product_footprint):
-    """Test Case 008: Get Footprint"""
+    """
+    Test Case 008: Get Footprint
+
+    Tests the target host system’s ability to return a PCF with a specific pfId. This pfId must correspond to one of the PCFs returned by the ListFootprints action.
+
+    Request:
+    A GetFootprint GET request must be sent to the /2/footprints/{GetPfId} endpoint of the test target host system with a valid access token and the syntax specified in PACT Tech Specs V2.2 § api-action-get-request.
+
+    Expected Response:
+    The test target host system must respond with 200 OK and a JSON body containing the PCF with the requested pfId, as specified in PACT Tech Specs V2.2 § api-action-get-response.
+    """
 
     # Create a new footprint
     response = client.post(
@@ -242,7 +346,17 @@ def test_010_attempt_getfootprint_with_invalid_token(client):
 
 @pytest.mark.conformance
 def test_011_attempt_getfootprint_with_non_existent_pf_id(client, auth_header):
-    """Test Case 011: Attempt GetFootprint with Non-Existent PfId"""
+    """
+    Test Case 011: Attempt GetFootprint with Non-Existent PfId
+
+    Tests the target host system’s ability to reject a GetFootprint request with a non-existent pfId with the correct error response.
+
+    Request:
+    A GetFootprint GET request must be sent to the /2/footprints/{GetPfId} endpoint of the test target host system, where {GetPfId} is a non-existent pfId, with a valid access token and the syntax specified in PACT Tech Specs V2.2 § api-action-get-request.
+
+    Expected Response:
+    The test target host system should respond with a 404 Not Found and a JSON body containing the error code NoSuchFootprint, as specified in PACT Tech Specs V2.2 § api-error-responses.
+    """
 
     # Create a non-existent pfId
     non_existent_pf_id = 'non-existent-pf-id'
@@ -255,7 +369,24 @@ def test_011_attempt_getfootprint_with_non_existent_pf_id(client, auth_header):
 
 @pytest.mark.conformance
 def test_012_openid_connect_authentication_flow(client):
-    """Test Case 012: OpenId Connect-based Authentication Flow"""
+    """
+    Test Case 012: OpenId Connect-based Authentication Flow
+
+    Tests target host system's ability to authenticate a requesting data recipient through a custom AuthEndpoint.
+
+    Condition:
+    The target host system supports the OpenId connect-based authentication flow (see PACT Tech Specs V2.2 § api-auth).
+
+    Request:
+    Following the OpenId Connect-based authentication flow, the testing party retrieves the OpenId Provider Configuration Document.
+
+    The testing party then authenticates through the AuthEndpoint referenced in the Configuration Document as specified PACT Tech Specs V2.2 § api-action-auth-request.
+
+    Expected Response:
+    The target host system returns a valid OpenId Provider Configuration Document
+
+    The test target host system responds with 200 OK and a JSON body containing the access token, as specified in PACT Tech Specs V2.2 § api-action-auth-response upon the testing party authenticating through the token endpoint referenced in the Configuration Document.
+    """
 
     # Retrieve the OpenId Provider Configuration Document
     response = client.get("/.well-known/openid-configuration")
@@ -273,6 +404,7 @@ def test_012_openid_connect_authentication_flow(client):
 
 
 @pytest.mark.conformance
+@pytest.mark.v2_1_0
 def test_013_openid_connect_authentication_flow_with_incorrect_credentials(client, test_credentials):
     """Test Case 013: OpenId connect-based authentication flow with incorrect credentials
 
@@ -371,7 +503,20 @@ def test_015_attempt_listfootprints_through_http_non_https(client, auth_header):
 
 @pytest.mark.conformance
 def test_016_get_filtered_list_of_footprints(client, auth_header):
-    """Test Case 016: Get Filtered List of Footprints"""
+    """
+    Test Case 016: Get Filtered List of Footprints
+
+    Tests the filtering implementation of a target host system's ListFootprints action (see PACT Tech Specs V2.2 § api-action-list-filtering).
+
+    Condition:
+    The target host system supports filtering.
+
+    Request:
+    A ListFootPrints GET request must be sent to the /2/footprints endpoint of the test target host system with the filter parameter, a valid access token and the syntax specified in PACT Tech Specs V2.2 § api-action-list-request.
+
+    Expected Response:
+    The test target host system should respond with 200 OK and a JSON body containing a list of PCFs matching the filtering criteria.
+    """
 
     # Define the filter parameter
     filter_param = "$filter=productCategoryCpc eq '22222'"
@@ -389,7 +534,7 @@ def test_016_get_filtered_list_of_footprints(client, auth_header):
 
 
 def test_017_attempt_getfootprint_through_http_non_https(client, auth_header):
-    """Test Case 016: Attempt GetFootprint through HTTP (non-HTTPS)
+    """Test Case 017: Attempt GetFootprint through HTTP (non-HTTPS)
 
     Condition:
     According to PACT Tech Specs V2.2 § api-requirements, a host system must offer its actions under https method only.
