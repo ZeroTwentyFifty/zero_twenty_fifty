@@ -27,8 +27,8 @@ app = start_application()
 app.add_middleware(PaginationMiddleware)
 
 auth = AuthXConfig()
-auth.JWT_SECRET_KEY = "SECRET_KEY"
-# auth.JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=2)
+auth.JWT_SECRET_KEY = settings.SECRET_KEY
+auth.JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=2)
 security = AuthX(config=auth)
 security.handle_errors(app)
 
