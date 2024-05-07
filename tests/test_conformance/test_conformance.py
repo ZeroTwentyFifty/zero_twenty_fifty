@@ -532,7 +532,7 @@ def test_016_get_filtered_list_of_footprints(client, auth_header):
     for footprint in footprints:
         assert footprint["productCategoryCpc"] == "22222"
 
-
+@pytest.mark.conformance
 def test_017_attempt_getfootprint_through_http_non_https(client, auth_header):
     """Test Case 017: Attempt GetFootprint through HTTP (non-HTTPS)
 
@@ -562,6 +562,7 @@ def test_017_attempt_getfootprint_through_http_non_https(client, auth_header):
     assert response.status_code >= 400
 
 
+@pytest.mark.conformance
 @pytest.mark.xfail(reason="Endpoint is not implemented", strict=True)
 def test_018_receive_notification_of_pcf_update(client, auth_header):
     """Test Case 018: Receive Notification of PCF Update
@@ -600,6 +601,7 @@ def test_018_receive_notification_of_pcf_update(client, auth_header):
     assert response.json() == {}
 
 
+@pytest.mark.conformance
 @pytest.mark.xfail(reason="Events functionality is not implemented", strict=True)
 def test_019_notify_of_pcf_update(client, auth_header):
     """Test Case 019: Notify of PCF Update
@@ -624,6 +626,7 @@ def test_019_notify_of_pcf_update(client, auth_header):
     pass
 
 
+@pytest.mark.conformance
 @pytest.mark.xfail(reason="Asynchronous PCF request functionality is not implemented", strict=True)
 def test_020_asynchronous_pcf_request(client, auth_header):
     """Test Case 020: Asynchronous PCF Request
@@ -662,6 +665,7 @@ def test_020_asynchronous_pcf_request(client, auth_header):
     assert response.status_code == 200
 
 
+@pytest.mark.conformance
 @pytest.mark.xfail(reason="Asynchronous PCF response functionality is not implemented", strict=True)
 def test_021_respond_to_asynchronous_pcf_request(client, auth_header):
     """Test Case 021: Respond to Asynchronous PCF Request
@@ -746,6 +750,7 @@ def test_023_attempt_events_with_invalid_token(client):
     assert response.json()["code"] == "AccessDenied"
 
 
+@pytest.mark.conformance
 def test_024_attempt_action_events_through_http_non_https(client, auth_header):
     """Test Case 024: Attempt Action Events through HTTP (non-HTTPS)
 
