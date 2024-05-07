@@ -18,7 +18,7 @@ router = APIRouter()
 oauth2_scheme = OAuth2ClientCredentials(tokenUrl="/auth/token")
 
 config = AuthXConfig()
-config.JWT_SECRET_KEY = "SECRET_KEY"
+config.JWT_SECRET_KEY = settings.SECRET_KEY
 config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=2)
 security = AuthX(config=config)
 
