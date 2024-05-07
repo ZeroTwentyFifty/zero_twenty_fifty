@@ -47,7 +47,6 @@ def login_for_access_token(
     if not user:    
         return JSONResponse({"error": "invalid_client", "error_description": "Authentication failed"}, status_code=400)
 
-    # TODO: Remove the sub with user.email, and update the uid to be something more legitimate
-    access_token: str = security.create_access_token(uid="USER_ID", sub=user.email)
+    access_token: str = security.create_access_token(uid=str(user.id), sub=user.email)
 
     return {"access_token": access_token, "token_type": "bearer"}
