@@ -85,3 +85,9 @@ If all went well, you should be able to see the database tables inside the `ztf`
 
 Create a file called `pytest.ini`, and model it off the `env.template` file. There's a chance this may be handled for
 you by `dotenv`, but probably not.
+
+By default, the conformance tests are excluded from the default `pytest` run, and are run as part of a separate pipeline in CI/CD.
+
+To run the conformance tests:
+
+    pytest -m conformance
