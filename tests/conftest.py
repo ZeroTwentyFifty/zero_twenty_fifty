@@ -131,6 +131,34 @@ are duplicates across files, look into putting them in one place and having the 
 set itself up easily. A good place to start would probably be just learning a bit more
 about good quality fixture organisation in Pytest.
 """
+@pytest.fixture()
+def valid_json_product_footprint(valid_carbon_footprint_data):
+    return {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "specVersion": "string",
+        "precedingPfids": [
+            "3fa85f64-5717-4562-b3fc-2c963f66af10"
+        ],
+        "version": 1,
+        "created": "2023-06-18T22:38:02.331Z",
+        "updated": "2023-06-18T22:38:02.331Z",
+        "status": "Active",
+        "statusComment": "string",
+        "validityPeriodStart": datetime(2023, 1, 1, tzinfo=timezone.utc).isoformat(),
+        "validityPeriodEnd": "2023-06-18T22:38:02.331Z",
+        "companyName": "Clean Product Company",
+        "companyIds": [
+                "urn:epc:id:sgln:0614141.00002.0"
+        ],
+        "productDescription": "string",
+        "productIds": [
+                "urn:epc:id:gtin:0614141.011111.0"
+        ],
+        "productCategoryCpc": "22222",
+        "productNameCompany": "string",
+        "comment": "string",
+        "pcf": valid_carbon_footprint_data
+    }
 
 
 @pytest.fixture
