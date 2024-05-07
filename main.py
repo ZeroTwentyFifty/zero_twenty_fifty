@@ -7,8 +7,6 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.encoders import jsonable_encoder
 from fastapi_pagination import add_pagination
 from fastapi.responses import JSONResponse
-from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
-
 
 from apis.base import api_router
 from core.config import settings
@@ -28,16 +26,6 @@ def start_application():
 
 app = start_application()
 
-
-@app.middleware("http")
-async def https_only_middleware(request: Request, call_next):
-    if not request.url.scheme == "https":
-        return JSONResponse(status_code=405, content={"error": "Method Not Allowed"})
-
-    response = await call_next(request)
-    return response
-
-app.add_middleware(HTTPSRedirectMiddleware)
 app.add_middleware(PaginationMiddleware)
 
 auth = AuthXConfig()
