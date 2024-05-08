@@ -62,6 +62,7 @@ def test_create_new_user_existing_username(db_session, test_user):
         create_new_user(user=UserCreate(**user_data), db=db_session)
     assert str(exc_info.value) == "A user with this username already exists"
 
+
 def test_retrieve_user_not_found(db_session):
     item = retrieve_user(db=db_session, user_id=99999)
     assert item is None
