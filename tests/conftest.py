@@ -27,7 +27,7 @@ from schemas.carbon_footprint import (
     ProductOrSectorSpecificRuleOperator
 )
 from db.session import get_db
-from db.repository.users import create_new_user
+from db.repository.users import create_new_user, create_new_superuser
 from schemas.user import UserCreate
 
 
@@ -140,6 +140,32 @@ def auth_header(client, test_user):
             "scope": "",
             "client_id": "testuser@example.com",
             "client_secret": "testuser"
+        },
+    )
+    token = response.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
+def test_superuser(db_session: SessionTesting):
+    user_data = {
+        "username": "testsuperuser",
+        "email": "testsuperuser@example.com",
+        "password": "testsuperuser",
+    }
+    user = create_new_superuser(user=UserCreate(**user_data), db=db_session)
+    return user
+
+
+@pytest.fixture
+def superuser_auth_header(client, test_superuser):
+    response = client.post(
+        "/auth/token",
+        data={
+            "grant_type": "",
+            "scope": "",
+            "client_id": "testsuperuser@example.com",
+            "client_secret": "testsuperuser"
         },
     )
     token = response.json()["access_token"]
