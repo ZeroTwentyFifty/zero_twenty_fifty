@@ -42,7 +42,8 @@ def create_user(
         AccessDeniedError: If the current user is not a superuser.
         DuplicateEntryError: If a user with the same email or username already exists.
     """
-    user_info = retrieve_user(db=db, user_id=int(current_user.sub))
+    user_id = int(current_user.sub)
+    user_info = retrieve_user(db=db, user_id=user_id)
     if not user_info.is_superuser:
         return AccessDeniedError().to_json_response()
 
