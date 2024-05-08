@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from authx import AuthX, AuthXConfig, TokenPayload
 
 from core.config import settings
-from core.error_responses import AccessDeniedError
+from core.error_responses import AccessDeniedError, DuplicateEntryError
 from db.repository.users import create_new_user, retrieve_user
 from db.session import get_db
 from schemas.user import ShowUser
@@ -40,10 +40,14 @@ def create_user(
 
     Raises:
         AccessDeniedError: If the current user is not a superuser.
+        DuplicateEntryError: If a user with the same email or username already exists.
     """
     user_info = retrieve_user(db=db, user_id=int(current_user.sub))
     if not user_info.is_superuser:
         return AccessDeniedError().to_json_response()
 
-    user = create_new_user(user=user, db=db)
-    return user
+    try:
+        user = create_new_user(user=user, db=db)
+        return user
+    except ValueError as e:
+        return DuplicateEntryError(message=str(e)).to_json_response()

@@ -128,3 +128,17 @@ class InternalError(ErrorResponse):
 
     def __init__(self):
         super().__init__("An internal or unexpected error has occurred", "InternalError", 500)
+
+
+class DuplicateEntryError(ErrorResponse):
+    """
+    Error response for duplicate entry errors.
+
+    Attributes:
+        message (str): A human-readable error description.
+        code (str): An error response code. Defaults to "DuplicateEntry".
+        status_code (int): The HTTP status code associated with the error response code. Defaults to 409.
+    """
+
+    def __init__(self, message):
+        super().__init__(message, "DuplicateEntry", 409)

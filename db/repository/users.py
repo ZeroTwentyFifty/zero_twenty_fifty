@@ -19,7 +19,18 @@ def create_new_user(user: UserCreate, db: Session) -> User:
 
     Returns:
         User: The newly created user.
+
+    Raises:
+        ValueError: If a user with the same email or username already exists.
     """
+    existing_user = db.query(User).filter(User.email == user.email).first()
+    if existing_user:
+        raise ValueError("A user with this email already exists")
+
+    existing_user = db.query(User).filter(User.username == user.username).first()
+    if existing_user:
+        raise ValueError("A user with this username already exists")
+
     user = User(
         username=user.username,
         email=user.email,
