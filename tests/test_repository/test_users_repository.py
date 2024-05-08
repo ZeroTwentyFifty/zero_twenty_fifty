@@ -49,6 +49,19 @@ def test_create_new_user_sets_attributes(db_session, test_user):
     assert new_user.is_superuser is False
 
 
+def test_create_new_user_existing_email(db_session, test_user):
+    user_data = {"username": "newuser", "email": test_user.email, "password": "newuser"}
+    with pytest.raises(ValueError) as exc_info:
+        create_new_user(user=UserCreate(**user_data), db=db_session)
+    assert str(exc_info.value) == "A user with this email already exists"
+
+
+def test_create_new_user_existing_username(db_session, test_user):
+    user_data = {"username": test_user.username, "email": "newuser@example.com", "password": "newuser"}
+    with pytest.raises(ValueError) as exc_info:
+        create_new_user(user=UserCreate(**user_data), db=db_session)
+    assert str(exc_info.value) == "A user with this username already exists"
+
 def test_retrieve_user_not_found(db_session):
     item = retrieve_user(db=db_session, user_id=99999)
     assert item is None

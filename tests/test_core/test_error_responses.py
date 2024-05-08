@@ -2,7 +2,7 @@ import json
 
 from core.error_responses import (
     AccessDeniedError, BadRequestError, NoSuchFootprintError,
-    NotImplementedError, TokenExpiredError, InternalError
+    NotImplementedError, TokenExpiredError, InternalError, DuplicateEntryError
 )
 
 
@@ -46,6 +46,13 @@ def test_internal_error():
     assert error.message == "An internal or unexpected error has occurred"
     assert error.code == "InternalError"
     assert error.status_code == 500
+
+
+def test_duplicate_entry_error():
+    error = DuplicateEntryError("A user with this email already exists")
+    assert error.message == "A user with this email already exists"
+    assert error.code == "DuplicateEntry"
+    assert error.status_code == 409
 
 
 def test_error_response_to_json_response():
