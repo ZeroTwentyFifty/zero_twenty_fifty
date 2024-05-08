@@ -2,7 +2,7 @@ import pytest
 
 from core.hashing import Hasher
 from db.models.user import User
-from db.repository.users import create_new_user
+from db.repository.users import create_new_user, create_new_superuser, retrieve_user
 from schemas.user import UserCreate
 
 
@@ -48,6 +48,60 @@ def test_create_new_user_sets_attributes(db_session, test_user):
     assert new_user.is_active is True
     assert new_user.is_superuser is False
 
+
+def test_retrieve_user_not_found(db_session):
+    item = retrieve_user(db=db_session, user_id=99999)
+    assert item is None
+
+
+def test_retrieve_user_success(test_user, db_session):
+    item = retrieve_user(db=db_session, user_id=test_user.id)
+    assert item is not None
+    assert item.username == test_user.username
+    assert item.email == test_user.email
+
+
+@pytest.fixture(scope="function")
+def test_fixture_superuser(db_session):
+    user_data = {"username": "testsuperuser", "email": "testsuperuser@example.com", "password": "testsuperuser"}
+    user = create_new_superuser(user=UserCreate(**user_data), db=db_session)
+    return user
+
+
+def test_create_new_superuser(db_session):
+    user_data = {"username": "newsuperuser", "email": "newsuperuser@example.com", "password": "newsuperuser"}
+    user = create_new_superuser(user=UserCreate(**user_data), db=db_session)
+    assert user.username == "newsuperuser"
+    assert user.email == "newsuperuser@example.com"
+    assert user.is_active is True
+    assert user.is_superuser is True
+
+
+def test_create_new_superuser_invalid_email(db_session):
+    user_data = {"username": "invalidsuperuser", "email": "invalid_email", "password": "newsuperuser"}
+    with pytest.raises(ValueError):
+        create_new_superuser(user=UserCreate(**user_data), db=db_session)
+
+
+def test_create_new_superuser_commit(db_session):
+    user_data = {"username": "newsuperuser_commit", "email": "newsuperuser_commit@example.com", "password": "newsuperuser"}
+    new_user = create_new_superuser(user=UserCreate(**user_data), db=db_session)
+    db_session.commit()
+    assert db_session.query(User).filter(User.username == "newsuperuser_commit").first() is not None
+
+
+def test_create_new_superuser_hashes_password(db_session, test_fixture_superuser):
+    user_data = {"username": "newsuperuser1", "email": "newsuperuser1@example.com", "password": "newsuperuser"}
+    new_user = create_new_superuser(user=UserCreate(**user_data), db=db_session)
+    assert new_user.hashed_password != user_data["password"]
+    assert Hasher.verify_password(plain_password=user_data["password"], hashed_password=new_user.hashed_password)
+
+
+def test_create_new_superuser_sets_attributes(db_session, test_fixture_superuser):
+    user_data = {"username": "newsuperuser2", "email": "newsuperuser2@example.com", "password": "newsuperuser"}
+    new_user = create_new_superuser(user=UserCreate(**user_data), db=db_session)
+    assert new_user.is_active is True
+    assert new_user.is_superuser is True
 
 """
 TODO: We are not performing any sort of validation on the password field
