@@ -1,3 +1,4 @@
+from authx import TokenPayload
 from fastapi_pagination import paginate
 from fastapi import APIRouter
 from fastapi import Depends
@@ -35,7 +36,7 @@ def create_product_footprint(
 
 
 @router.get("/{id}", response_model=dict[str, ProductFootprintSchema], status_code=200)
-def read_product_footprint(id: str, db: Session = Depends(get_db), current_user: User = Depends(security.access_token_required)):
+def read_product_footprint(id: str, db: Session = Depends(get_db), current_user: TokenPayload = Depends(security.access_token_required)):
     """
     TODO: Replace the {id} with a Pydantic inout validation schema for UUIDv4 values
     """
