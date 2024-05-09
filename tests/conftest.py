@@ -1,40 +1,29 @@
 import os
 import sys
 from datetime import datetime, timezone
-from typing import Any
-from typing import Generator
+from typing import Any, Generator
 
-from authx.exceptions import JWTDecodeError, MissingTokenError
 import pytest
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from fastapi_pagination import add_pagination
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
 
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # this is to include backend dir in sys.path so that we can import from db,main.py
 
-from apis.base import api_router
+from core.app_config import create_app
 from db.base import Base
-from db.models.product_footprint import ProductFootprint, ProductFootprintStatus
+from db.models.product_footprint import ProductFootprint
 from db.models.carbon_footprint import CarbonFootprintModel, ProductOrSectorSpecificRuleModel, EmissionFactorDatasetModel
+from db.session import get_db
+from db.repository.users import create_new_user, create_new_superuser
 from schemas.carbon_footprint import (
     CharacterizationFactors, BiogenicAccountingMethodology, DeclaredUnit, RegionOrSubregion,
     ProductOrSectorSpecificRuleOperator
 )
-from db.session import get_db
-from db.repository.users import create_new_user, create_new_superuser
 from schemas.user import UserCreate
-
-
-def start_application():
-    app = FastAPI()
-    app.include_router(api_router)
-    return app
 
 
 SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/postgres"
@@ -46,46 +35,10 @@ SessionTesting = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 @pytest.fixture
-def app() -> Generator[FastAPI, Any, None]:
-    """
-    TODO: This needs a serious refactor, the way that the app object is instantiated should be
-        identical to the way that it is instantiated in the main.py script, in fact, they should be literally
-        the same thing, so that testing can be done properly.
-    """
+def app():
     Base.metadata.create_all(engine)
-    _app = start_application()
-    add_pagination(_app)
-
-    # @_app.middleware("http")
-    # async def https_only_middleware(request: Request, call_next):
-    #     if not request.url.scheme == "https":
-    #         return JSONResponse(status_code=405, content={"error": "Method Not Allowed"})
-    #
-    #     response = await call_next(request)
-    #     return response
-
-    @_app.exception_handler(MissingTokenError)
-    async def missing_bearer_token_error_handler(request, exc):
-        return JSONResponse({"message": "Bad Request", "code": "BadRequest"}, status_code=400)
-
-    @_app.exception_handler(JWTDecodeError)
-    async def jwt_decode_error_handler(request, exc):
-        # message = "Signature verification failed" when the token is not valid/illegitimate
-        print(exc.args[0])
-        decode_error_reason: str = exc.args[0]
-        if decode_error_reason == "Signature has expired":
-            return JSONResponse({"message": "The specified access token has expired", "code": "TokenExpired"},
-                                status_code=401)
-        else:
-            return JSONResponse(
-                content={
-                    "message": "AccessDenied",
-                    "code": "AccessDenied"
-                },
-                status_code=403
-            )
-
-    yield _app
+    app = create_app()
+    yield app
     Base.metadata.drop_all(engine)
 
 
