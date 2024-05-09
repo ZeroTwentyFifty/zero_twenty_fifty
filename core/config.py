@@ -27,6 +27,8 @@ class Settings:
     SECRET_KEY: str = os.getenv("SECRET_KEY")
     ALGORITHM = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES = 2  # in mins
+    LOG_FILE: Path = Path(os.getenv("LOG_FILE", "logs.log"))
+    LOG_LEVEL: str = os.getenv("LOG_LEVEL", "DEBUG")
 
 
 settings = Settings()
