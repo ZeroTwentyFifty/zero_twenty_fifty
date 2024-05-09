@@ -1,6 +1,3 @@
-from datetime import timedelta
-
-from authx import AuthX, AuthXConfig
 from authx.exceptions import JWTDecodeError, MissingTokenError
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
@@ -9,6 +6,7 @@ from fastapi_pagination import add_pagination
 from fastapi.responses import JSONResponse
 
 from apis.base import api_router
+from core.auth_config import apply_authx_error_handling
 from core.config import settings
 from core.pagination import PaginationMiddleware
 
@@ -28,11 +26,7 @@ app = start_application()
 
 app.add_middleware(PaginationMiddleware)
 
-auth = AuthXConfig()
-auth.JWT_SECRET_KEY = settings.SECRET_KEY
-auth.JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=2)
-security = AuthX(config=auth)
-security.handle_errors(app)
+apply_authx_error_handling(app)
 
 
 @app.exception_handler(MissingTokenError)

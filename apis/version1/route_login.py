@@ -1,26 +1,20 @@
-from datetime import timedelta, datetime
-
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from core.config import settings
+from core.auth_config import get_authx_security
 from core.error_responses import BadRequestError
 from core.hashing import Hasher
 from core.oauth2_client_credentials import OAuth2ClientCredentialsRequestForm, OAuth2ClientCredentials
 from db.repository.login import get_user
 from db.session import get_db
 from schemas.token import Token
-from authx import AuthX, AuthXConfig
 
 router = APIRouter()
 oauth2_scheme = OAuth2ClientCredentials(tokenUrl="/auth/token")
 
-config = AuthXConfig()
-config.JWT_SECRET_KEY = settings.SECRET_KEY
-config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=2)
-security = AuthX(config=config)
+security = get_authx_security()
 
 
 def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):
