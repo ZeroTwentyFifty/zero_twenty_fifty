@@ -4,7 +4,7 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from apis.version1.route_login import security
+from core.auth_config import get_authx_security
 from core.error_responses import NoSuchFootprintError
 from core.pagination import JSONAPIPage
 from db.models.user import User
@@ -17,7 +17,7 @@ from schemas.carbon_footprint import CarbonFootprint as CarbonFootprintSchema, E
 
 
 router = APIRouter()
-
+security = get_authx_security()
 
 """
 TODO: Implement full CRUD functionality for this module.
