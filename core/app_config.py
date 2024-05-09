@@ -1,14 +1,14 @@
 from authx.exceptions import JWTDecodeError, MissingTokenError
 from fastapi import FastAPI, Request, status
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
-from fastapi_pagination import add_pagination
 from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
+from fastapi_pagination import add_pagination
+from fastapi.responses import JSONResponse
 
-from core.config import settings
-from core.auth_config import apply_authx_error_handling
-from core.pagination import PaginationMiddleware
 from apis.base import api_router
+from core.auth_config import apply_authx_error_handling
+from core.config import settings
+from core.pagination import PaginationMiddleware
 
 
 def create_app() -> FastAPI:
