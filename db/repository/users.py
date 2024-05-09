@@ -5,6 +5,7 @@ This module contains functions for creating and retrieving users from the databa
 from sqlalchemy.orm import Session
 
 from core.hashing import Hasher
+from core.logger import logger
 from db.models.user import User
 from schemas.user import UserCreate
 
@@ -23,12 +24,16 @@ def create_new_user(user: UserCreate, db: Session) -> User:
     Raises:
         ValueError: If a user with the same email or username already exists.
     """
+    logger.info(f"Creating a new user with email {user.email}")
+
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
+        logger.error(f"A user with email {user.email} already exists")
         raise ValueError("A user with this email already exists")
 
     existing_user = db.query(User).filter(User.username == user.username).first()
     if existing_user:
+        logger.error(f"A user with username {user.username} already exists")
         raise ValueError("A user with this username already exists")
 
     user = User(
@@ -38,10 +43,11 @@ def create_new_user(user: UserCreate, db: Session) -> User:
         is_active=True,
         is_superuser=False,
     )
-    print(user)
+    logger.debug(f"Adding user {user} to the database")
     db.add(user)
     db.commit()
     db.refresh(user)
+    logger.success(f"New user created with email {user.email}")
     return user
 
 
@@ -56,6 +62,8 @@ def create_new_superuser(user: UserCreate, db: Session) -> User:
     Returns:
         User: The newly created superuser.
     """
+    logger.info(f"Creating a new superuser with email {user.email}")
+
     user = User(
         username=user.username,
         email=user.email,
@@ -63,10 +71,11 @@ def create_new_superuser(user: UserCreate, db: Session) -> User:
         is_active=True,
         is_superuser=True,
     )
-    print(user)
+    logger.debug(f"Adding superuser {user} to the database")
     db.add(user)
     db.commit()
     db.refresh(user)
+    logger.success(f"New superuser created with email {user.email}")
     return user
 
 
@@ -81,5 +90,10 @@ def retrieve_user(*, db: Session, user_id: int) -> User:
     Returns:
         User: The retrieved user, or None if no user was found.
     """
+    logger.info(f"Retrieving user with ID {user_id}")
     item = db.query(User).filter(User.id == user_id).first()
+    if item:
+        logger.success(f"User with ID {user_id} retrieved successfully")
+    else:
+        logger.warning(f"No user with ID {user_id} found")
     return item
