@@ -94,7 +94,7 @@ def create_new_superuser(user: UserCreate, db: Session) -> User:
     return user
 
 
-def retrieve_user(*, db: Session, user_id: int) -> User:
+def retrieve_user(*, db: Session, user_id: int) -> User | None:
     """
     Retrieves a user from the database by their ID.
 
@@ -112,3 +112,63 @@ def retrieve_user(*, db: Session, user_id: int) -> User:
     else:
         logger.warning(f"No user with ID {user_id} found")
     return item
+
+
+def retrieve_user_by_email(*, db: Session, email: str) -> User | None:
+    """
+    Retrieves a user from the database by their email.
+
+    Args:
+        email (str): The email of the user to retrieve.
+        db (Session): The database session to use.
+
+    Returns:
+        User: The retrieved user, or None if no user was found.
+    """
+    logger.info(f"Retrieving user with email {email}")
+    item = db.query(User).filter(User.email == email).first()
+    if item:
+        logger.success(f"User with email {email} retrieved successfully")
+    else:
+        logger.warning(f"No user with email {email} found")
+    return item
+
+
+def retrieve_user_by_username(*, db: Session, username: str) -> User | None:
+    """
+    Retrieves a user from the database by their username.
+
+    Args:
+        username (str): The username of the user to retrieve.
+        db (Session): The database session to use.
+
+    Returns:
+        User: The retrieved user, or None if no user was found.
+    """
+    logger.info(f"Retrieving user with username {username}")
+    item = db.query(User).filter(User.username == username).first()
+    if item:
+        logger.success(f"User with username {username} retrieved successfully")
+    else:
+        logger.warning(f"No user with username {username} found")
+    return item
+
+
+def authenticate_user(username: str, password: str, db: Session) -> User | None:
+    """
+    Authenticates a user by their username and password.
+
+    Args:
+        username (str): The username of the user to authenticate.
+        password (str): The password of the user to authenticate.
+        db (Session): The database session to use.
+
+    Returns:
+        User: The authenticated user if the credentials are valid, otherwise None.
+    """
+    user = retrieve_user_by_email(email=username, db=db)
+    if not user:
+        return None
+    if not Hasher.verify_password(plain_password=password, hashed_password=user.hashed_password):
+        return None
+    return user
