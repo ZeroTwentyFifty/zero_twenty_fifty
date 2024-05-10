@@ -76,7 +76,7 @@ def test_retrieve_user_success(test_user, db_session):
 
 
 @pytest.fixture(scope="function")
-def test_fixture_superuser(db_session):
+def test_superuser(db_session):
     user_data = {"username": "testsuperuser", "email": "testsuperuser@example.com", "password": "testsuperuser"}
     user = create_new_superuser(user=UserCreate(**user_data), db=db_session)
     return user
@@ -104,18 +104,33 @@ def test_create_new_superuser_commit(db_session):
     assert db_session.query(User).filter(User.username == "newsuperuser_commit").first() is not None
 
 
-def test_create_new_superuser_hashes_password(db_session, test_fixture_superuser):
+def test_create_new_superuser_hashes_password(db_session, test_superuser):
     user_data = {"username": "newsuperuser1", "email": "newsuperuser1@example.com", "password": "newsuperuser"}
     new_user = create_new_superuser(user=UserCreate(**user_data), db=db_session)
     assert new_user.hashed_password != user_data["password"]
     assert Hasher.verify_password(plain_password=user_data["password"], hashed_password=new_user.hashed_password)
 
 
-def test_create_new_superuser_sets_attributes(db_session, test_fixture_superuser):
+def test_create_new_superuser_sets_attributes(db_session, test_superuser):
     user_data = {"username": "newsuperuser2", "email": "newsuperuser2@example.com", "password": "newsuperuser"}
     new_user = create_new_superuser(user=UserCreate(**user_data), db=db_session)
     assert new_user.is_active is True
     assert new_user.is_superuser is True
+
+
+def test_create_new_superuser_existing_email(db_session, test_superuser):
+    user_data = {"username": "newsuperuser", "email": test_superuser.email, "password": "newsuperuser"}
+    with pytest.raises(ValueError) as exc_info:
+        create_new_superuser(user=UserCreate(**user_data), db=db_session)
+    assert str(exc_info.value) == "A user with this email already exists"
+
+
+def test_create_new_superuser_existing_username(db_session, test_superuser):
+    user_data = {"username": test_superuser.username, "email": "newsuperuser@example.com", "password": "newsuperuser"}
+    with pytest.raises(ValueError) as exc_info:
+        create_new_superuser(user=UserCreate(**user_data), db=db_session)
+    assert str(exc_info.value) == "A user with this username already exists"
+
 
 """
 TODO: We are not performing any sort of validation on the password field
