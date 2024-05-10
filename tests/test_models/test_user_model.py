@@ -13,11 +13,23 @@ def test_user_creation(test_user):
 
 
 def test_user_uniqueness(db_session):
-    user1 = User(username="user1", email="user1@example.com", hashed_password="password")
+    user1 = User(
+        username="user1",
+        email="user1@example.com",
+        hashed_password="password"
+    )
     db_session.add(user1)
     db_session.commit()
 
     with pytest.raises(IntegrityError):
-        user2 = User(username="user1", email="user2@example.com", hashed_password="password")
+        user2 = User(
+            username="user1",
+            email="user2@example.com",
+            hashed_password="password"
+        )
         db_session.add(user2)
         db_session.commit()
+
+
+def test_user_str_method(test_user):
+    assert str(test_user) == f"User(id={test_user.id}, username=testuser, email=testuser@example.com)"
