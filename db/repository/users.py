@@ -43,11 +43,12 @@ def create_new_user(user: UserCreate, db: Session) -> User:
         is_active=True,
         is_superuser=False,
     )
-    logger.debug(f"Adding user {user} to the database")
+    logger.debug(f"Adding user {user.email} to the database")
     db.add(user)
     db.commit()
     db.refresh(user)
-    logger.success(f"New user created with email {user.email}")
+    logger.debug(f"Added user {user} to the database")
+    logger.success(f"New superuser created with email {user.email}")
     return user
 
 
