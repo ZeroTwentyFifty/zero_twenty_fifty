@@ -61,8 +61,21 @@ def create_new_superuser(user: UserCreate, db: Session) -> User:
 
     Returns:
         User: The newly created superuser.
+
+    Raises:
+        ValueError: If a user with the same email or username already exists.
     """
     logger.info(f"Creating a new superuser with email {user.email}")
+
+    existing_user = db.query(User).filter(User.email == user.email).first()
+    if existing_user:
+        logger.error(f"A user with email {user.email} already exists")
+        raise ValueError("A user with this email already exists")
+
+    existing_user = db.query(User).filter(User.username == user.username).first()
+    if existing_user:
+        logger.error(f"A user with username {user.username} already exists")
+        raise ValueError("A user with this username already exists")
 
     user = User(
         username=user.username,
@@ -71,10 +84,11 @@ def create_new_superuser(user: UserCreate, db: Session) -> User:
         is_active=True,
         is_superuser=True,
     )
-    logger.debug(f"Adding superuser {user} to the database")
+    logger.debug(f"Adding superuser {user.email} to the database")
     db.add(user)
     db.commit()
     db.refresh(user)
+    logger.debug(f"Added superuser {user} to the database")
     logger.success(f"New superuser created with email {user.email}")
     return user
 
