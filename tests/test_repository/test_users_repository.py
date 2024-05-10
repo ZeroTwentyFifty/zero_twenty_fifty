@@ -3,7 +3,7 @@ import pytest
 from core.hashing import Hasher
 from db.models.user import User
 from db.repository.users import (
-    create_new_user, create_new_superuser, retrieve_user,
+    create_new_user, create_new_superuser, retrieve_user_by_id,
     retrieve_user_by_email, retrieve_user_by_username, authenticate_user
 )
 from schemas.user import UserCreate
@@ -64,13 +64,13 @@ def test_create_new_user_existing_username(db_session, test_user):
     assert str(exc_info.value) == "A user with this username already exists"
 
 
-def test_retrieve_user_not_found(db_session):
-    item = retrieve_user(db=db_session, user_id=99999)
+def test_retrieve_user_by_id_not_found(db_session):
+    item = retrieve_user_by_id(db=db_session, user_id=99999)
     assert item is None
 
 
-def test_retrieve_user_success(test_user, db_session):
-    item = retrieve_user(db=db_session, user_id=test_user.id)
+def test_retrieve_user_by_id_success(test_user, db_session):
+    item = retrieve_user_by_id(db=db_session, user_id=test_user.id)
     assert item is not None
     assert item.username == test_user.username
     assert item.email == test_user.email

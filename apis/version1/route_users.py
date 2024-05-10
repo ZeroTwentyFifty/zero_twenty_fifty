@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from core.auth_config import get_authx_security
 from core.error_responses import AccessDeniedError, DuplicateEntryError
 from core.logger import logger
-from db.repository.users import create_new_user, retrieve_user
+from db.repository.users import create_new_user, retrieve_user_by_id
 from db.session import get_db
 from schemas.user import ShowUser
 from schemas.user import UserCreate
@@ -40,7 +40,7 @@ def create_user(
     logger.info(f"Creating a new user with email {user.email}")
 
     user_id = int(current_user.sub)
-    user_info = retrieve_user(db=db, user_id=user_id)
+    user_info = retrieve_user_by_id(db=db, user_id=user_id)
     if not user_info.is_superuser:
         logger.warning(f"Access denied for user {current_user.sub} trying to create a new user")
         return AccessDeniedError().to_json_response()

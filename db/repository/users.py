@@ -94,7 +94,7 @@ def create_new_superuser(user: UserCreate, db: Session) -> User:
     return user
 
 
-def retrieve_user(*, db: Session, user_id: int) -> User | None:
+def retrieve_user_by_id(*, db: Session, user_id: int) -> User | None:
     """
     Retrieves a user from the database by their ID.
 
