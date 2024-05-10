@@ -2,15 +2,16 @@ import pytest
 
 from core.hashing import Hasher
 from db.models.user import User
-from db.repository.users import create_new_user, create_new_superuser, retrieve_user
+from db.repository.users import (
+    create_new_user, create_new_superuser, retrieve_user,
+    retrieve_user_by_email, retrieve_user_by_username, authenticate_user
+)
 from schemas.user import UserCreate
 
 
-@pytest.fixture(scope="function")
-def test_fixture_user(db_session):
-    user_data = {"username": "testuser", "email": "testuser@example.com", "password": "testuser"}
-    user = create_new_user(user=UserCreate(**user_data), db=db_session)
-    return user
+@pytest.fixture
+def test_credentials():
+    return "testuser@example.com", "testuser"
 
 
 def test_create_new_user(db_session):
@@ -130,6 +131,43 @@ def test_create_new_superuser_existing_username(db_session, test_superuser):
     with pytest.raises(ValueError) as exc_info:
         create_new_superuser(user=UserCreate(**user_data), db=db_session)
     assert str(exc_info.value) == "A user with this username already exists"
+
+
+def test_retrieve_user_by_email_not_found(db_session):
+    item = retrieve_user_by_email(db=db_session, email="nonexistent@example.com")
+    assert item is None
+
+
+def test_retrieve_user_by_email_success(test_user, db_session):
+    item = retrieve_user_by_email(db=db_session, email=test_user.email)
+    assert item is not None
+    assert item.username == test_user.username
+    assert item.email == test_user.email
+
+
+def test_retrieve_user_by_username_not_found(db_session):
+    item = retrieve_user_by_username(db=db_session, username="nonexistent")
+    assert item is None
+
+
+def test_retrieve_user_by_username_success(test_user, db_session):
+    item = retrieve_user_by_username(db=db_session, username=test_user.username)
+    assert item is not None
+    assert item.username == test_user.username
+    assert item.email == test_user.email
+
+
+def test_authenticate_user_valid_credentials(test_credentials, test_user, db_session):
+    username, password = test_credentials
+    authenticated_user = authenticate_user(username, password, db_session)
+    assert authenticated_user == test_user
+
+
+def test_authenticate_user_invalid_credentials(db_session):
+    username = "testuser"
+    password = "wrongpassword"
+    authenticated_user = authenticate_user(username, password, db_session)
+    assert authenticated_user is None
 
 
 """

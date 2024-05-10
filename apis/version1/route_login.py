@@ -8,7 +8,7 @@ from core.error_responses import BadRequestError
 from core.hashing import Hasher
 from core.logger import logger
 from core.oauth2_client_credentials import OAuth2ClientCredentialsRequestForm, OAuth2ClientCredentials
-from db.repository.login import get_user
+from db.repository.users import retrieve_user_by_email, authenticate_user
 from db.session import get_db
 from schemas.token import Token
 
@@ -16,15 +16,6 @@ router = APIRouter()
 oauth2_scheme = OAuth2ClientCredentials(tokenUrl="/auth/token")
 
 security = get_authx_security()
-
-
-def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):
-    user = get_user(username=username, db=db)
-    if not user:
-        return None
-    if not Hasher.verify_password(plain_password=password, hashed_password=user.hashed_password):
-        return None
-    return user
 
 
 @router.post("/token", response_model=Token)
