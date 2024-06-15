@@ -1,6 +1,6 @@
 # ZeroTwentyFifty
 
-This repository and application represents [ZeroTwentyFifty](https://zerotwentyfifty.com)'s implementation
+This repository and application represents [ZeroTwentyFifty](https://zerotwentyfifty.com)'s [PACT Conformant](https://www.zerotwentyfifty.com/blog/zerotwentyfifty-is-listed-as-a-pact-conformant-solution-by-wbcsd-pact) implementation
 of the [WBCSD](https://www.wbcsd.org/) [Partnership For Carbon Transparency (PACT)](https://www.carbon-transparency.com/) [Pathfinder Protocol](https://wbcsd.github.io/data-exchange-protocol/v2).
 
 It is part of our commitment to the fight against climate change, to bring Open Source implementations of critical
@@ -8,6 +8,8 @@ pathway software, so that organisations of all sizes can move together as one.
 
 If you need help with the software, have questions or queries, or would like to more directly engage ZeroTwentyFifty in work, please reach out to us:
 `louis@zerotwentyfifty.com`
+
+![ZeroTwentyFifty PACT Conformance Badge](/assets/PACT%20conformant%20Badge.png)
 
 
 ## Development
