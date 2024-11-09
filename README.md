@@ -1,13 +1,20 @@
     
+<div align="center"> <a href="https://github.com/ZeroTwentyFifty/zero_twenty_fifty"> <img src="https://cdn.prod.website-files.com/6629e3d1c80c6641a561617b/662a3ca679227ff860a667a0_Screenshot%20from%202024-04-25%2021-20-47.png" alt="Logo" width="80" height="80"> </a> </div>
 
 <h3  align="center">ZeroTwentyFifty</h3>
 
+<div align="center"> <a href="https://github.com/ZeroTwentyFifty/zero_twenty_fifty/blob/master/assets/PACT%20conformant%20Badge.png"> <img src="https://drive.google.com/file/d/1SiTeNyQ_AIzwG2o8-hlL4wHk-55DZoYj/view?usp=sharing" alt="PACT conformant badge" width="80" height="80"> </a> </div>
+
+
+
+
 
 ![ClimateTech](https://img.shields.io/badge/Topic-ClimateTech-brightgreen) ![Sustainability](https://img.shields.io/badge/Topic-Sustainability-yellow) ![Uptime](https://img.shields.io/badge/Uptime-up%25-brightgreen) ![CarbonFootprinting](https://img.shields.io/badge/Topic-CarbonFootprinting-ff69b4) ![Pricing](https://img.shields.io/badge/Pricing-Free-brightgreen) 
-![Help Wanted](https://img.shields.io/badge/Help%20Wanted-Contribute-blue)  ![GitHub stars](https://img.shields.io/github/stars/ZeroTwentyFifty/zero_twenty_fifty?style=social)  [![Pact Conformant](https://img.shields.io/badge/Pact-Conformant-brightgreen)](https://github.com/ZeroTwentyFifty/zero_twenty_fifty/blob/master/assets/PACT%20conformant%20Badge.png)
+![Help Wanted](https://img.shields.io/badge/Help%20Wanted-Contribute-blue)  ![GitHub stars](https://img.shields.io/github/stars/ZeroTwentyFifty/zero_twenty_fifty?style=social)  [![Pact Conformant](https://img.shields.io/badge/Pact-Conformant-brightgreen)](https://github.com/ZeroTwentyFifty/zero_twenty_fifty/blob/master/assets/PACT%20conformant%20Badge.png) ![Test Coverage](https://img.shields.io/badge/Test%20Coverage-100%25-green)
+![Build passing](https://img.shields.io/badge/Build-passing-blue)
+
 
   
-
 # About
 
 
@@ -107,8 +114,6 @@ If you need help with the software, have questions or queries, or would like to 
 ## Author 
 This project was created and is maintained by [Louis W](https://github.com/JohnVonNeumann). If you have any questions or suggestions, feel free to reach out or open an issue on this repository.
 
-## License 
-This project is licensed under the MIT License, meaning you are free to use, modify, and distribute this software under the terms of the MIT License.
 
 ## Acknowledgements
 Thanks to these wonderful people for contributing:
