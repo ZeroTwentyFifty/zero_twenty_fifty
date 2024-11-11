@@ -1,0 +1,1 @@
+curl --location 'https://localhost:8000/2/auth/token' --header 'Content-Type: application/x-www-form-urlencoded' -d "grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}"

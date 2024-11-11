@@ -1,0 +1,85 @@
+{
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "specVersion": "string",
+    "precedingPfids": [
+        "3fa85f64-5717-4562-b3fc-2c963f66af10"
+    ],
+    "version": 1,
+    "created": "2023-06-18T22:38:02.331Z",
+    "updated": "2023-06-18T22:38:02.331Z",
+    "status": "Active",
+    "statusComment": "string",
+    "validityPeriodStart": "2023-06-18T22:38:02.331Z",
+    "validityPeriodEnd": "2023-06-18T22:38:02.331Z",
+    "companyName": "Clean Product Company",
+    "companyIds": [
+        "urn:epc:id:sgln:0614141.00002.0"
+    ],
+    "productDescription": "string",
+    "productIds": [
+        "urn:epc:id:gtin:0614141.011111.0"
+    ],
+    "productCategoryCpc": "22222",
+    "productNameCompany": "string",
+    "comment": "string",
+    "pcf": {
+        "declaredUnit": "kilogram",
+        "unitaryProductAmount": 100,
+        "pCfExcludingBiogenic": 10,
+        "pCfIncludingBiogenic": 12,
+        "fossilGhgEmissions": 8,
+        "fossilCarbonContent": 5,
+        "biogenicCarbonContent": 4,
+        "dLucGhgEmissions": 2,
+        "landManagementGhgEmissions": 3,
+        "otherBiogenicGhgEmissions": 1,
+        "iLucGhgEmissions": 2,
+        "biogenicCarbonWithdrawal": -1,
+        "aircraftGhgEmissions": 0.5,
+        "characterizationFactors": "AR6",
+        "crossSectoralStandardsUsed": [
+            "GHG Protocol Product standard"
+        ],
+        "productOrSectorSpecificRules": [
+            {
+                "operator": "PEF",
+                "ruleNames": [
+                    "EN15804+A2"
+                ]
+            },
+            {
+                "operator": "Other",
+                "ruleNames": [
+                    "CFS Guidance for XYZ Sector"
+                ],
+                "otherOperatorName": "CFS"
+            }
+        ],
+        "biogenicAccountingMethodology": "PEF",
+        "boundaryProcessesDescription": "Description of boundary processes",
+        "referencePeriodStart": "2023-06-18T22:38:02.331Z",
+        "referencePeriodEnd": "2023-06-18T22:38:02.331Z",
+        "geographyRegionOrSubregion": "Australia and New Zealand",
+        "secondaryEmissionFactorSources": [
+            {
+                "name": "ecoinvent",
+                "version": "3.9.1"
+            }
+        ],
+        "exemptedEmissionsPercent": 2.5,
+        "exemptedEmissionsDescription": "Description of exempted emissions",
+        "packagingEmissionsIncluded": "true",
+        "packagingGhgEmissions": 0.5,
+        "allocationRulesDescription": "Description of allocation rules",
+        "uncertaintyAssessmentDescription": "Description of uncertainty assessment",
+        "primaryDataShare": 50,
+        "dqi": {
+            "key1": "value1",
+            "key2": "value2"
+        },
+        "assurance": {
+            "key1": "value1",
+            "key2": "value2"
+        }
+    }
+}
