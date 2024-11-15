@@ -1,95 +1,124 @@
-# ZeroTwentyFifty
+    
+<div align="center"> <a href="https://github.com/ZeroTwentyFifty/zero_twenty_fifty"> <img src="https://cdn.prod.website-files.com/6629e3d1c80c6641a561617b/662a3ca679227ff860a667a0_Screenshot%20from%202024-04-25%2021-20-47.png" alt="Logo" width="80" height="80"> </a> </div>
 
-This repository and application represents [ZeroTwentyFifty](https://zerotwentyfifty.com)'s [PACT Conformant](https://www.zerotwentyfifty.com/blog/zerotwentyfifty-is-listed-as-a-pact-conformant-solution-by-wbcsd-pact) implementation
-of the [WBCSD](https://www.wbcsd.org/) [Partnership For Carbon Transparency (PACT)](https://www.carbon-transparency.com/) [Pathfinder Protocol](https://wbcsd.github.io/data-exchange-protocol/v2).
+<h3  align="center">ZeroTwentyFifty</h3>
 
-It is part of our commitment to the fight against climate change, to bring Open Source implementations of critical
-pathway software, so that organisations of all sizes can move together as one.
-
-If you need help with the software, have questions or queries, or would like to more directly engage ZeroTwentyFifty in work, please reach out to us:
-`louis@zerotwentyfifty.com`
-
-![ZeroTwentyFifty PACT Conformance Badge](/assets/PACT%20conformant%20Badge.png)
+<div align="center"> <a href="https://github.com/ZeroTwentyFifty/zero_twenty_fifty/blob/master/assets/PACT%20conformant%20Badge.png"> <img src="https://drive.google.com/file/d/1SiTeNyQ_AIzwG2o8-hlL4wHk-55DZoYj/view?usp=sharing" alt="PACT conformant badge" width="80" height="80"> </a> </div>
 
 
-## Development
-
-## Warning
-
-:warning: **Caution:** Whilst every effort has been taken to ensure that the codebase is currently kept in a "green" state, 
-the nature of such an early-stage piece of software makes it extremely difficult to keep everything in line with so many
-shifting parts. So if you check out at the current head, please bear in mind that things may be broken. Tagged versions
-will be kept in working order.
-
-### Setting up locally
-
-### Getting setup for the first time on a new setup/host
-You're gonna have to make sure that first you've got the deps installed, so from the root of the repo:
-
-    poetry install
 
 
-After this, install uvicorn, on Ubuntu this is with:
 
-    sudo apt install uvicorn
-
-Now you'll have to activate the shell to  have access to your poetry installed python deps:
-
-    poetry shell
-
-Finally, you can run this to access a local dev environment:
-
-    uvicorn main:app
-
-You can verify that the thing has launched correctly by going to:
-
-    http://127.0.0.1:8000/docs
-
-Now that you're there, you can get an auth token by going down to the:
-
-    POST /auth/token route and inserting a valid username and password in the client_id and client_secret fields
-
-Executing that should give you an auth token and validate that things are absolutely working correctly.
+![ClimateTech](https://img.shields.io/badge/Topic-ClimateTech-brightgreen) ![Sustainability](https://img.shields.io/badge/Topic-Sustainability-yellow) ![Uptime](https://img.shields.io/badge/Uptime-up%25-brightgreen) ![CarbonFootprinting](https://img.shields.io/badge/Topic-CarbonFootprinting-ff69b4) ![Pricing](https://img.shields.io/badge/Pricing-Free-brightgreen) 
+![Help Wanted](https://img.shields.io/badge/Help%20Wanted-Contribute-blue)  ![GitHub stars](https://img.shields.io/github/stars/ZeroTwentyFifty/zero_twenty_fifty?style=social)  [![Pact Conformant](https://img.shields.io/badge/Pact-Conformant-brightgreen)](https://github.com/ZeroTwentyFifty/zero_twenty_fifty/blob/master/assets/PACT%20conformant%20Badge.png) ![Test Coverage](https://img.shields.io/badge/Test%20Coverage-100%25-green)
+![Build passing](https://img.shields.io/badge/Build-passing-blue)
 
 
-#### Create local Postgres instance
-
-Connect to your pg local instance
-
-    psql -d postgres
-
-Create a database called ztf
-
-    CREATE DATABASE ztf;
-
-Make sure that values in `core/config.py` are valid for the local dev env setup:
-
-    ```python
-    POSTGRES_USER: str = os.getenv("PGUSER", "username")
-    POSTGRES_PASSWORD = os.getenv("PGPASSWORD", "password")
-    POSTGRES_SERVER: str = os.getenv("PGHOST", "localhost")
-    POSTGRES_PORT: str = os.getenv(
-        "PGPORT", 5432
-    )  # default postgres port is 5432
-    POSTGRES_DB: str = os.getenv("PGDATABASE", "ztf")
-    ```
-
-Finally, in order to have the database provision with tables, run (within a `poetry shell`):
-
-    uvicorn main:app
-
-If all went well, you should be able to see the database tables inside the `ztf` database with:
-
-    \dt
+  
+# About
 
 
-#### Setup for local testing
+ZeroTwentyFifty’s repository represents a [PACT Conformant ](https://www.zerotwentyfifty.com/blog/zerotwentyfifty-is-listed-as-a-pact-conformant-solution-by-wbcsd-pact) implementation of the [WBCSD Partnership for Carbon Transparency (PACT) Pathfinder Protocol](https://www.carbon-transparency.org/). 
+As a software company dedicated to combating climate change, we build solutions for sharing Scope 3 Product Carbon footprint data. 
 
-Create a file called `pytest.ini`, and model it off the `env.template` file. There's a chance this may be handled for
-you by `dotenv`, but probably not.
+This project is part of our commitment to providing open-source implementations of critical pathway software, enabling organizations of all sizes to collaborate effectively in their sustainability efforts.
 
-By default, the conformance tests are excluded from the default `pytest` run, and are run as part of a separate pipeline in CI/CD.
 
-To run the conformance tests:
+# Getting Started
 
-    pytest -m conformance
+> ⚠️ **Caution:** While every effort has been made to keep the codebase in a "green" state, being an early-stage software project means some components may be unstable. Please note that if you check out the current head, things may be broken. Tagged versions will be maintained in working order.
+
+## 1. Install Dependencies
+
+From the root of the repository, run:
+
+```bash
+poetry install
+```
+### 2. Install Uvicorn
+
+For Ubuntu, install Uvicorn with:
+```bash
+sudo apt install uvicorn
+```
+### 3. Activate Poetry Shell
+
+Activate the Poetry environment to access the installed Python dependencies:
+```bash
+poetry shell
+```
+### 4. Launch the Development Server
+
+Start the local development server with:
+```bash
+uvicorn main:app
+```
+### 5. Verify the Launch
+
+Open your browser and navigate to:
+
+[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+
+To obtain an authentication token, go to the **POST /auth/token** route and enter a valid username and password in the `client_id` and `client_secret` fields. This should return an auth token and confirm that everything is working correctly.
+
+## Create Local PostgreSQL Instance
+
+### 1. Connect to PostgreSQL
+
+Connect to your local PostgreSQL instance:
+```
+psql -d postgres
+```
+### 2. Create the Database
+
+Create a database called `ztf`:
+```
+CREATE DATABASE ztf;
+```
+### 3. Verify Configuration
+
+Ensure that the values in `core/config.py` are set correctly for your local development environment:
+
+
+POSTGRES_USER: str = os.getenv("PGUSER", "username")<br> POSTGRES_PASSWORD = os.getenv("PGPASSWORD", "password")<br> POSTGRES_SERVER: str = os.getenv("PGHOST", "localhost")<br> POSTGRES_PORT: str = os.getenv("PGPORT", 5432) # default PostgreSQL port is 5432<br> POSTGRES_DB: str = os.getenv("PGDATABASE", "ztf")
+
+
+### 4. Provision Database Tables
+
+Run the following command within the Poetry shell to provision the database with tables:
+```
+uvicorn main:app
+```
+If successful, you should see the database tables inside the `ztf` database by executing:
+```
+\dt
+```
+
+## Setup for Local Testing
+
+### 1. Create `pytest.ini`
+
+Create a file named `pytest.ini` modeled after the `env.template` file. Note that this may be handled by dotenv.
+
+### 2. Run Conformance Tests
+
+By default, conformance tests are excluded from the default pytest run and executed in a separate CI/CD pipeline. To run the conformance tests, use:
+```
+pytest -m conformance
+```
+
+## Contact us
+If you need help with the software, have questions or queries, or would like to more directly engage ZeroTwentyFifty in work, please reach out to us at:
+[louis@zerotwentyfifty.com](mailto:louis@zerotwentyfifty.com)
+
+## Author 
+This project was created and is maintained by [Louis W](https://github.com/JohnVonNeumann). If you have any questions or suggestions, feel free to reach out or open an issue on this repository.
+
+
+## Acknowledgements
+Thanks to these wonderful people for contributing:
+
+[Chinwoke Anugwara](https://github.com/Chinwoke-C)
+
+
+
