@@ -1,22 +1,51 @@
-    
-<div align="center"> <a href="https://github.com/ZeroTwentyFifty/zero_twenty_fifty"> <img src="https://cdn.prod.website-files.com/6629e3d1c80c6641a561617b/662a3ca679227ff860a667a0_Screenshot%20from%202024-04-25%2021-20-47.png" alt="Logo" width="80" height="80"> </a> </div>
+<p align="center">
+  <a href="https://www.zerotwentyfifty.com/solutions/zerotwentyfifty">
+   <img src="https://github.com/user-attachments/assets/3cc843f2-9dff-4dde-a06b-0218a577f207" alt="branding">
+  </a>
 
-<h3  align="center">ZeroTwentyFifty</h3>
+  <h3 align="center">ZeroTwentyFifty Corporation</h3>
+
+  <p align="center">
+    Enabling the exchange of product-level carbon accounting data.
+    <br />
+    <a href="https://www.zerotwentyfifty.com"><strong>Learn more »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/orgs/ZeroTwentyFifty/discussions">Discussions</a>
+    ·
+    <a href="https://www.zerotwentyfifty.com/blog">Blog</a>
+    ·
+    <a href="https://www.zerotwentyfifty.com/solutions">Solutions</a>
+    ·
+    <a href="https://www.zerotwentyfifty.com/services">Services</a>
+    ·
+    <a href="https://mailchi.mp/zerotwentyfifty.com/newsletter">Newsletter</a>
+  </p>
+
+</p>
+
+<p align="center">
+    <a href="https://github.com/ZeroTwentyFifty/zero_twenty_fifty/actions"><img src="https://img.shields.io/badge/coverage-pytest--cov-red.svg"></a>
+    <a href="https://img.shields.io/badge/license-MIT-blue.svg"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="license"></a>
+    <a href="https://github.com/ZeroTwentyFifty/zero_twenty_fifty/stargazers"><img src="https://img.shields.io/github/stars/ZeroTwentyFifty/zero_twenty_fifty" alt="Github Stars"></a>
+    <a href="https://img.shields.io/github/workflows/status/ZeroTwentyFifty/zero_twenty_fifty/master"><img src="https://github.com/ZeroTwentyFifty/zero_twenty_fifty/actions/workflows/app.yml/badge.svg"></a>
+    <!--<a href="https://readthedocs.org/projects/pathfinder-framework/badge/?version=latest"><img src="https://pathfinder-framework.readthedocs.io/en/latest/?badge=latest"></a>-->
+    <img src="https://img.shields.io/badge/Topic-ClimateTech-brightgreen" alt="ClimateTech">
+    <img src="https://img.shields.io/badge/Topic-Sustainability-yellow" alt="Sustainability">
+    <img src="https://img.shields.io/badge/Topic-CarbonFootprinting-ff69b4" alt="Carbon Footprinting">
+    <img src="https://img.shields.io/badge/Pricing-Free-brightgreen" alt="Pricing">
+    <img src="https://img.shields.io/badge/Help%20Wanted-Contribute-blue" alt="Help Wanted">
+    <a href="https://github.com/ZeroTwentyFifty/zero_twenty_fifty/blob/master/assets/PACT%20conformant%20Badge.png">
+        <img src="https://img.shields.io/badge/PACT-Conformant-brightgreen" alt="PACT Conformant">
+    </a>
+</p>
+
+
 
 <div align="center"> <a href="https://github.com/ZeroTwentyFifty/zero_twenty_fifty/blob/master/assets/PACT%20conformant%20Badge.png"> <img src="https://drive.google.com/file/d/1SiTeNyQ_AIzwG2o8-hlL4wHk-55DZoYj/view?usp=sharing" alt="PACT conformant badge" width="80" height="80"> </a> </div>
 
-
-
-
-
-![ClimateTech](https://img.shields.io/badge/Topic-ClimateTech-brightgreen) ![Sustainability](https://img.shields.io/badge/Topic-Sustainability-yellow) ![Uptime](https://img.shields.io/badge/Uptime-up%25-brightgreen) ![CarbonFootprinting](https://img.shields.io/badge/Topic-CarbonFootprinting-ff69b4) ![Pricing](https://img.shields.io/badge/Pricing-Free-brightgreen) 
-![Help Wanted](https://img.shields.io/badge/Help%20Wanted-Contribute-blue)  ![GitHub stars](https://img.shields.io/github/stars/ZeroTwentyFifty/zero_twenty_fifty?style=social)  [![Pact Conformant](https://img.shields.io/badge/Pact-Conformant-brightgreen)](https://github.com/ZeroTwentyFifty/zero_twenty_fifty/blob/master/assets/PACT%20conformant%20Badge.png) ![Test Coverage](https://img.shields.io/badge/Test%20Coverage-100%25-green)
-![Build passing](https://img.shields.io/badge/Build-passing-blue)
-
-
   
 # About
-
 
 ZeroTwentyFifty’s repository represents a [PACT Conformant ](https://www.zerotwentyfifty.com/blog/zerotwentyfifty-is-listed-as-a-pact-conformant-solution-by-wbcsd-pact) implementation of the [WBCSD Partnership for Carbon Transparency (PACT) Pathfinder Protocol](https://www.carbon-transparency.org/). 
 As a software company dedicated to combating climate change, we build solutions for sharing Scope 3 Product Carbon footprint data. 
