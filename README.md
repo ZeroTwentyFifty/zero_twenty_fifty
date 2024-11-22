@@ -42,7 +42,11 @@
 
 
 
-<div align="center"> <a href="https://github.com/ZeroTwentyFifty/zero_twenty_fifty/blob/master/assets/PACT%20conformant%20Badge.png"> <img src="https://drive.google.com/file/d/1SiTeNyQ_AIzwG2o8-hlL4wHk-55DZoYj/view?usp=sharing" alt="PACT conformant badge" width="80" height="80"> </a> </div>
+<p align="center">
+    <a href="(https://www.zerotwentyfifty.com/blog/zerotwentyfifty-is-listed-as-a-pact-conformant-solution-by-wbcsd-pact">
+      <img width="325" alt="PACT conformant Badge" src="https://github.com/user-attachments/assets/c5661265-e454-437b-b7ce-ecbe847d42e2">
+    </a>
+</p>
 
   
 # About
