@@ -43,7 +43,7 @@
 
 
 <p align="center">
-    <a href="(https://www.zerotwentyfifty.com/blog/zerotwentyfifty-is-listed-as-a-pact-conformant-solution-by-wbcsd-pact">
+    <a href="https://www.zerotwentyfifty.com/blog/zerotwentyfifty-is-listed-as-a-pact-conformant-solution-by-wbcsd-pact">
       <img width="325" alt="PACT conformant Badge" src="https://github.com/user-attachments/assets/c5661265-e454-437b-b7ce-ecbe847d42e2">
     </a>
 </p>
