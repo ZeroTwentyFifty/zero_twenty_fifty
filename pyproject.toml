@@ -37,6 +37,14 @@ mypy = "^1.8.0"
 freezegun = "^1.4.0"
 commitizen = "^3.31.0"
 
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_scheme = "semver2"
+version_provider = "poetry"
+update_changelog_on_bump = true
+major_version_zero = true
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
