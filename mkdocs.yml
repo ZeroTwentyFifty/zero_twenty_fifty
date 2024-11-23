@@ -1,0 +1,17 @@
+site_name: ZeroTwentyFifty - PACT Conformant Product Carbon Footprint Exchange Platform
+
+theme:
+  name: "material"
+
+repo_name: ZeroTwentyFifty/zero_twenty_fifty
+repo_url: https://github.com/ZeroTwentyFifty/zero_twenty_fifty
+site_author: ZeroTwentyFifty
+site_description: Documentation for ZeroTwentyFifty's flagship OS solution to PACT Conformant Product Carbon Footprint Exchange
+edit_uri: ""
+
+nav:
+  - Introduction: "README.md"
+  - Migrations: "MIGRATIONS.md"
+  - Local Database Setup: "POSTGRES_LOCAL_DOCKER_SETUP.md"
+  - Testing from the CLI: "TESTING_FROM_CLI.md"
+
