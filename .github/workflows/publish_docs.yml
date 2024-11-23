@@ -9,7 +9,6 @@ jobs:
 
   publish-documentation:
     runs-on: ubuntu-latest
-    needs: update-cli-screenshots
     steps:
       - uses: actions/checkout@v4
         with:
