@@ -9,6 +9,7 @@ Please fill in the following content to let us know better about this change.
 
 ## Checklist
 
+- [ ] Read the [developer contribution guide](./docs/developer_contribution_guide.md)
 - [ ] Add test cases to all the changes you introduce
 - [ ] Test the changes on the local machine manually
 - [ ] Update the documentation for the changes
