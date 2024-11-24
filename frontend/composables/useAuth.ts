@@ -7,6 +7,8 @@ export function useAuth() {
     password: undefined
   })
 
+  const config = useRuntimeConfig()
+
   const validate = (state: any): FormError[] => {
     const errors = []
     if (!state.email) errors.push({ path: 'email', message: 'Required' })
@@ -21,7 +23,7 @@ export function useAuth() {
       formData.append('client_id', event.data.email);
       formData.append('client_secret', event.data.password);
 
-      const response = await fetch('https://localhost:8000/auth/token', {
+      const response = await fetch(`${config.public.apiBase}/auth/token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -31,7 +33,7 @@ export function useAuth() {
 
       if (!response.ok) {
         throw new Error('Failed to authenticate');
-      }
+      } 
 
       const data = await response.json();
       console.log('Authentication successful:', data);
@@ -41,9 +43,11 @@ export function useAuth() {
       localStorage.setItem('bearerToken', bearerToken);
       
       console.log('Bearer token stored for future API calls');
+      
+      return true; // Indicate successful authentication
     } catch (error) {
       console.error('Authentication error:', error);
-      // Handle the error, e.g., show an error message to the user
+      return false; // Indicate failed authentication
     }
   }
 

@@ -1,7 +1,10 @@
 import { ref, reactive } from 'vue'
-import { type ProductFootprint, type FormError, DeclaredUnit } from '../types'
+import { type ProductFootprint, type FormError, DeclaredUnit, ProductFootprintStatus, CharacterizationFactors } from '../types'
 
 export function useFootprints() {
+
+    const config = useRuntimeConfig()
+
     const footprints = ref<ProductFootprint[]>([])
     const validationErrors = ref<FormError[]>([])
 
@@ -72,7 +75,7 @@ export function useFootprints() {
                 throw new Error('No bearer token found');
             }
 
-            const response = await fetch('https://localhost:8000/2/footprints', {
+            const response = await fetch(`${config.public.apiBase}/2/footprints`, {
                 headers: {
                     'Authorization': `Bearer ${bearerToken}`,
                     'Content-Type': 'application/json',
@@ -104,7 +107,7 @@ export function useFootprints() {
                 throw new Error('No bearer token found');
             }
 
-            const response = await fetch('https://localhost:8000/2/footprints/create-product-footprint/', {
+            const response = await fetch(`${config.public.apiBase}/2/footprints/create-product-footprint/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${bearerToken}`,
