@@ -1,24 +1,26 @@
 <template>
-    <header class="bg-blue-500 text-white p-4">
-      <div class="container mx-auto flex justify-between items-center">
-        <h1 class="text-xl font-bold">ZeroTwentyFifty</h1>
-        <nav>
-          <ul class="flex space-x-4">
-            <li><NuxtLink to="/">Home</NuxtLink></li>
-            <li><NuxtLink to="/dashboard">Dashboard</NuxtLink></li>
-            <li><NuxtLink to="/about">About</NuxtLink></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+    <UHorizontalNavigation :links="links" class="border-b border-gray-200 dark:border-gray-800" />
   </template>
   
-  <script setup lang="ts">
-  </script>
-  
-  <style scoped>
-  header {
-    background-color: var(--color-primary);
-  }
-  </style>
+<script setup lang="ts">
+const links = [{
+  label: 'Profile',
+  avatar: {
+    src: 'https://avatars.githubusercontent.com/u/739984?v=4'
+  },
+  badge: 100
+}, {
+  label: 'Home',
+  icon: 'i-heroicons-home',
+  to: '/'
+}, {
+  label: 'Dashboard',
+  icon: 'i-heroicons-chart-bar',
+  to: '/dashboard'
+}, {
+  label: 'About',
+  icon: 'i-heroicons-information-circle',
+  to: '/about'
+}]
+</script>
   
