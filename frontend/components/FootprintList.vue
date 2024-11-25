@@ -6,11 +6,12 @@ const { footprints, fetchFootprints } = useFootprints()
 </script>
 
 <template>
-  <div class="bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-4 text-gray-800">Footprints Dashboard</h2>
+  <UCard class="p-6">
+    <UCardTitle>Footprints Dashboard</UCardTitle>
     <UButton 
       @click="fetchFootprints" 
-      class="mb-4 bg-blue-600 hover:bg-blue-700 text-white"
+      class="mb-4"
+      color="primary"
     >
       Fetch Footprints
     </UButton>
@@ -20,5 +21,5 @@ const { footprints, fetchFootprints } = useFootprints()
       </li>
     </ul>
     <p v-else class="text-gray-700">No footprints data available. Click the button to fetch data.</p>
-  </div>
+  </UCard>
 </template>
